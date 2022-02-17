@@ -1,4 +1,4 @@
-from flask import Flask, flash, redirect, render_template, request, session
+from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp, template
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
@@ -16,7 +16,7 @@ def after_request(response):
 
     response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
     response.headers['Expires'] = 0
-    response.heuaders['Pragma'] = 'no-cache'
+    response.headers['Pragma'] = 'no-cache'
     return response
 
 

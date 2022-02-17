@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+
+{% block style %}
+    <link rel="stylesheet" href="../static/css/index.css">
+    <link rel="stylesheet" href="../static/owlcarousel/owlcarousel.min.css">
+    <link rel="stylesheet" href="../static/owlcarousel/">
+{% endblock %}
+
+{% block script %}
+    <script src="../static/owlcarousel/owlcarousel.min.js"></script>
+    <script defer src="../static/js/carousel-index.js"></script>
+{% endblock %}
+
+{% block body %}
+    <section class="container my-4">
+        <h1>O Turitiba</h1>
+        <p class="text-wrap">
+            Algumas vezes, na internet, é difícil encontrar pontos tuŕisticos de uma cidade, principalmente com tantos lugares na internet,
+            alguns com mecanismos ineficientes de ranqueamento e amostragem. É justamente por isso que surgiu o Turitiba!
+        </p>
+        <p>
+            Aqui, teremos muitos pontos turísticos de Curitiba, entre parques, museus, praças, dentre outros, onde será possível filtrar eficientemente,
+            saber antecipadamente o que cada localidade tem a seu dispor, e também verificar avaliações de outros usuários!
+        </p>
+    </section>
+    <section class="container my-4 text-light p-4" id="carousel">
+        <h2 class="h3">
+            Lugares mais famosos
+        </h2>
+        <article class="owl-carousel owl-theme text-light">
+            <div class="item p-1">
+                <h4>Jardim Botânico</h4>
+                <figure>
+                    <img src="../static/img/botanico.jpg" alt="Jardim Botânico" width="400">
+                </figure>
+            </div>
+            <div class="item p-1">
+                <h4>Parque Barigui</h4>
+                <figure>
+                    <img src="../static/img/barigui.jpg" alt="Parque Barigui" width="400">
+                </figure>
+            </div>
+            <div class="item p-1">
+                <h4>Parque Tanguá</h4>
+                <figure>
+                    <img src="../static/img/tangua.jpg" alt="Parque Tanguá" width="400">
+                </figure>
+            </div>
+        </article>
+    </section>
+    <section class="container my-4">
+        <h2 class="text-dark h3">
+            A Linha Turismo
+        </h2>
+        <img src="" alt="">
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Laudantium, deleniti obcaecati delectus tempora autem sunt nisi. Vel culpa voluptatibus, soluta consequatur omnis sint iste molestiae eos, enim totam unde necessitatibus!</p>
+
+    </section>
+{% endblock %}
