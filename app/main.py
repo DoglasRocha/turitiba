@@ -1,4 +1,3 @@
-from crypt import methods
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp, template
