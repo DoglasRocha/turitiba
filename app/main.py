@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp, template
@@ -28,5 +29,26 @@ Session(app)
 
 @app.route('/')
 def index():
+    '''Returns the template of the ‘/’ route. '''
     
     return render_template('index.html') 
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    
+    if request.method == 'GET':
+        
+        return render_template('login.html')
+    
+    return redirect('/')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    
+    if request.method == 'GET':
+        
+        return render_template('register.html')
+    
+    return redirect('/')

@@ -1,0 +1,22 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <article class="container-sm mt-5">
+        <form method="POST" action="/login">
+            <div class="mb-3 form-group">
+                <label for="username" class="form-label">Nome de Usuário</label>
+                <input type="text" class="form-control" id="username" name="username" aria-describedby="username">
+            </div>
+            <div class="mb-3 form-group">
+                <label for="password" class="form-label">Senha</label>
+                <input type="password" class="form-control" id="password">
+            </div>
+            <div class="mt-3 form-group">
+                <button type="submit" class="btn btn-primary">Entrar</button>
+                <button class="btn btn-primary mx-2"><a href="/register" class="text-decoration-none text-light">Cadastrar</a></button>
+            </div>
+        </form>
+    </article>
+
+{% endblock body %}
