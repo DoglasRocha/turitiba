@@ -1,3 +1,4 @@
+from new_user import NewUser
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp, template
@@ -54,62 +55,21 @@ def register():
         
         return render_template('register.html')
     
-    fields = ['name', 'email', 'username', 'password', 
-              'confirm-password']
-    
     # gets data from form
-    name = request.form.get(fields[0])
-    email = request.form.get(fields[1])
-    username = request.form.get(fields[2])
-    password = request.form.get(fields[3])
-    confirm_password = request.form.get(fields[4])
+    name = request.form.get('name') or ''
+    email = request.form.get('email') or ''
+    username = request.form.get('username') or ''
+    password = request.form.get('password') or ''
+    confirm_password = request.form.get('confirm-password') or ''
     
     # error checking
-    if not (len(name) > 0 and ' ' in name):
+    user = NewUser(name, email, username, password, confirm_password)
+    
+    if user.is_all_okay():
+        user.send_to_db()
+    
+    # flash and redirect
+    for message in user.get_messages():
+        flash(message)
         
-        flash('Nome inválido!!!')
-        return redirect('/register')
-    
-    if not ('@' in email and '.' in email):
-        
-        flash('E-mail inválido!!!')
-        return redirect('/register')
-    
-    all_emails = db.get_all_emails()
-    for mail in all_emails:
-        
-        if (email == mail[0]):
-            
-            flash('Este email já foi cadastrado.')
-            return redirect('/register')
-    
-    if not (len(username) > 0 and ' ' not in username):
-        
-        flash('Nome de usuário inválido!!!')
-        return redirect('/register')
-    
-    all_usernames = db.get_all_usernames()
-    for user in all_usernames:
-        
-        if (username == user[0]):
-            
-            flash('Este nome de usuário já foi escolhido.')
-            return redirect('/register')
-    
-    if not (len(password) >= 8):
-        
-        flash('Senha inválida!!!')
-        return redirect('/register')
-    
-    if not (password == confirm_password):
-        
-        flash('As senhas digitadas não são iguais!!!')
-        return redirect('/register')
-    
-    # add user to tb
-    db.add_user_to_db(username.lower(), name, email.lower(), 
-                      generate_password_hash(password))
-    
-    # redirect to main page
-    flash('Cadastrado com sucesso!')
-    return redirect('/')
+    return redirect(user.get_redirection())
