@@ -41,7 +41,11 @@
                         </li>
                     </ul>
                     <div class="navbar-nav d-flex">
-                        <a class="nav-link" href="/login">Log In</a>
+                        {% if session.username %}
+                            <a href="/user/{{ session.username }}" class="nav-link">{{ session.username }}</a>
+                        {% else %}
+                            <a class="nav-link" href="/login">Log In</a>
+                        {% endif %}
                         <i class="nav-link fa-solid fa-user"></i>
                     </div>
                 </div>

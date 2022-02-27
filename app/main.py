@@ -1,4 +1,5 @@
 from new_user import NewUser
+from log_user import LogUser
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp, template
@@ -29,7 +30,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # db manager
-db = DBManager('turitiba.db')
+db = DBManager('./turitiba.db')
 
 @app.route('/')
 def index():
@@ -40,12 +41,30 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    '''Deals with the login. If receives a request with the GET method, 
+    just renders the login screen.
+    '''
     
     if request.method == 'GET':
         
         return render_template('login.html')
     
-    return redirect('/')
+    session.clear()
+    
+    username = request.form.get('username') or ''
+    password = request.form.get('password') or ''
+    
+    # error checking
+    user = LogUser(username, password, db)
+    
+    if user.is_all_okay():
+        session['username'] = username
+        
+    # flash messages
+    for message in user.get_messages():
+        flash(message)
+        
+    return redirect(user.get_redirection())
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -63,7 +82,8 @@ def register():
     confirm_password = request.form.get('confirm-password') or ''
     
     # error checking
-    user = NewUser(name, email, username, password, confirm_password)
+    user = NewUser(name, email, username, password, confirm_password,
+                   db)
     
     if user.is_all_okay():
         user.send_to_db()

@@ -1,15 +1,17 @@
+from cgi import test
 from db_manager import DBManager
 from werkzeug.security import generate_password_hash
+from user import User
 
-class NewUser:
+class NewUser(User):
     
     
     def __init__(self, name: str, email: str, username: str, 
-                 password: str, confirm_password: str) -> None:
+                 password: str, confirm_password: str, db: object) -> None:
         
         self.__messages = []
         self.__redirection = None
-        self.__db = DBManager('turitiba.db')
+        self.__db = db
         
         if self.test_name(name):
             self.__name = name
@@ -61,30 +63,23 @@ class NewUser:
         
         test_value = []
         
-        if not (len(username) > 0 and ' ' not in username):
-            
-            self.__messages.append('Nome de usuário inválido!!!')
-            test_value.append(False)
+        result = super().test_username(
+            username,
+            self.__messages)
+        test_value.append(result)
         
         all_usernames = self.__db.get_all_usernames()
         for user in all_usernames:
             
             if (username == user[0]):
                 
-                self.__messages.append('Este nome de usuário já foi escolhido.')
+                self.__messages.append('Este nome de usuário já foi escolhido!!!')
                 test_value.append(False)
                 
         return all(test_value)
     
-    
     def test_password(self, password: str) -> bool:
-    
-        if not (len(password) >= 8):
-            
-            self.__messages.append('Senha inválida!!!')
-            return False
-        
-        return True
+        return super().test_password(password, self.__messages)
     
 
     def test_confirm_password(self, password: str, confirm_password: 
@@ -105,24 +100,28 @@ class NewUser:
     
     def is_all_okay(self) -> bool:
         
-        if (len(self.__messages) == 0):
-            
-            self.__messages.append('Cadastrado com sucesso!')
-            self.__redirection = '/login'
-            return True
-        
-        self.__redirection = '/register'
-        return False
+        return super().is_all_okay(
+            self.__messages,
+            'Cadastrado com sucesso!',
+            self.set_redirection,
+            '/login', 
+            '/register'
+        )
+    
+    
+    def set_redirection(self, route: str) -> str:
+        self.__redirection = route
     
     
     def get_redirection(self) -> str:
-        
         return self.__redirection
     
     
     def send_to_db(self) -> None:
-        self.__db.add_user_to_db(self.__username.lower(), self.__name, 
-                                 self.__email.lower(), 
-                                 generate_password_hash(self.__password))
+        self.__db.add_user_to_db(
+            self.__username.lower(), self.__name, 
+            self.__email.lower(), 
+            generate_password_hash(self.__password)
+        )
 
     
