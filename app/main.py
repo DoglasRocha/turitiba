@@ -41,8 +41,15 @@ def index():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    '''Deals with the login. If receives a request with the GET method, 
-    just renders the login screen.
+    '''
+    Deals with the login. If receives a request with the GET 
+    method, just renders the login screen.
+    Else, clears the cookies, gets the username and the password from
+    the form, uses LogUser class to do error checking, writes the 
+    cookies with the username if all the tests are past successfully,
+    flash all the messages from the object and redirect to the correct
+    route. If all is successfull, goes to the main route, if not, stays
+    in the login route. 
     '''
     
     if request.method == 'GET':
