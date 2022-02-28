@@ -116,4 +116,11 @@ def register():
 @app.route('/user/<username>')
 def user(username: str):
     
-    return render_template('user.html')
+    user_info = db.get_user_info(username)[0]
+    info = {
+        'username': username,
+        'name': user_info[0],
+        'email': user_info[1]
+    }
+    
+    return render_template('user.html', info=info)

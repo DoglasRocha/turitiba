@@ -1,5 +1,3 @@
-from cgi import test
-from db_manager import DBManager
 from werkzeug.security import generate_password_hash
 from user import User
 

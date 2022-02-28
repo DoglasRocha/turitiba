@@ -100,3 +100,18 @@ class DBManager:
         connection.close()
         
         return p_hash
+    
+    
+    def get_user_info(self, username: str) -> list:
+        
+        connection, cursor = self.create_connection()
+        
+        user_info = cursor.execute('''SELECT name, email
+                                   FROM users
+                                   WHERE username = ?''',
+                                   (username,)).fetchall()
+        
+        connection.commit()
+        connection.close()
+        
+        return user_info

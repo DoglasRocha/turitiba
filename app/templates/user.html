@@ -1,0 +1,51 @@
+{% extends 'layout.html' %}
+
+{% block script %}
+
+    <script defer src="../static/js/user.js"></script>
+
+{% endblock script %}
+
+{% block body %}
+
+    <article class="container-sm mt-5">
+        <form method="POST" action="/update-user">
+            <div class="my-3 form-group">
+                <label for="name" class="form-label">Nome e Sobrenome</label>
+                <input type="text" class="form-control" id="name" name="name" aria-describedby="name" autocomplete="off"
+                    value="{{ info.name }}">
+                <p id="name-alert" class="form-text">Atualize seu nome e seu sobrenome</p>
+            </div>
+            <div class="my-3 form-group">
+                <label for="email" class="form-label">E-Mail</label>
+                <input type="email" class="form-control" id="email" name="email" aria-describedby="email" autocomplete="off"
+                    value="{{ info.email }}">
+                <p id="email-alert" class="form-text">Atualize seu email</p>
+            </div>
+            <div class="my-3 form-group">
+                <label for="username" class="form-label">Nome de Usuário</label>
+                <input type="text" class="form-control" id="username" name="username" aria-describedby="username" autocomplete="off" 
+                    disabled value="{{ info.username }}">
+            </div>
+            <div class="my-3 form-group">
+                <label for="password" class="form-label">Senha Atual</label>
+                <input type="password" class="form-control" id="old-password" autocomplete="off" name="old-password">
+                <p id="old-password-alert" class="form-text text-danger">Digite sua senha atual</p>
+            </div>
+            <div class="my-3 form-group">
+                <label for="password" class="form-label">Nova Senha</label>
+                <input type="password" class="form-control" id="password" autocomplete="off" name="password">
+                <p id="password-alert" class="form-text text-danger">Sua nova senha deve conter 8 caracteres</p>
+            </div>
+            <div class="my-3 form-group">
+                <label for="confrim-password" class="form-label">Confirmação da Senha</label>
+                <input type="password" class="form-control" id="confirm-password" autocomplete="off" name="confirm-password">
+                <p id="confirm-password-alert" class="form-text text-danger">A confirmação de nova senha deve ser igual à nova senha</p>
+            </div>
+            <div class="my-3 form-group">
+                <input id="submit" type="submit" class="btn btn-primary mx-2" value="Atualizar" disabled>
+            </div>
+        </form>
+    </article>
+    
+{% endblock body %}
