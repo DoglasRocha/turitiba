@@ -41,9 +41,15 @@
                         </li>
                     </ul>
                     <div class="navbar-nav d-flex">
+                        <form action="/search" method="POST" class="d-flex mx-4">
+                            <input class="form-control me-2" type="search" placeholder="Pesquisar ponto turístico..." aria-label="Search"
+                                name="search">
+                            <button class="btn btn-outline-success" type="submit">Pesquisar</button>
+                          </form>
                         {% if session.username %}
                             <a href="/user/{{ session.username }}" class="nav-link">{{ session.username }}</a>
                         {% else %}
+                            <a class="nav-link" href="/register">Cadastrar</a>
                             <a class="nav-link" href="/login">Log In</a>
                         {% endif %}
                         <i class="nav-link fa-solid fa-user"></i>

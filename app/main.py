@@ -76,6 +76,17 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    ''''
+    Deals with the user registration.
+    If receives a request with the GET method, just renders the register
+    screen.
+    If not, gets the data from the registration form, do error checking
+    using the NewUser class. If all the test are past successfully, sends
+    the new user data to the DB.
+    Then, flashes all the messages from the object and redirects to the
+    correct route. If the user is successfully registered, redirects to
+    the login route, else, stays in the registration route.
+    '''
     
     if request.method == 'GET':
         

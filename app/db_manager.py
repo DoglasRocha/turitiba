@@ -1,7 +1,11 @@
 import sqlite3 as sql
 
 class DBManager:
-    
+    '''
+    Class that deals with all the SQL instructions. All the methods
+    that require any SQL query are written in this class.
+    When instantiated, receives the path to the Database.
+    '''
     
     def __init__(self, path_to_db: str) -> None:
         
@@ -9,6 +13,12 @@ class DBManager:
         
     
     def create_connection(self) -> tuple:
+        '''
+        Creates the connection with the database and the cursor,
+        to avoid repetitive instructions.
+        
+        Returns the connection and the cursor.
+        '''
         
         connection = sql.connect(self.path_to_db)
         cursor = connection.cursor()
@@ -18,6 +28,12 @@ class DBManager:
     
     def add_user_to_db(self, username: str, name: str, email: str, 
                        password_hash: str) -> None:
+        '''Adds a user to the DB. 
+        
+        Receives the username, name, email and password hash and inserts
+        them to the DB.
+        
+        Then closes the connection.'''
         
         connection, cursor = self.create_connection()
         
