@@ -111,3 +111,9 @@ def register():
         flash(message)
         
     return redirect(user.get_redirection())
+
+
+@app.route('/user/<username>')
+def user(username: str):
+    
+    return render_template('user.html')
