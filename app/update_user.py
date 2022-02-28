@@ -60,13 +60,11 @@ class UpdateUser(User):
             self.__messages.append('E-mail inválido!!!')
             return False        
     
-        all_emails = self.__db.get_all_emails()
-        for mail in all_emails:
+        result = self.__db.search_for_email(email)
+        if (len(result) > 0):
             
-            if (email == mail[0]):
-            
-                self.__messages.append('Este email já foi cadastrado.')
-                return False
+            self.__messages.append('Este email já foi cadastrado.')
+            return False
 
         if (email == self.__current_data[1]):
             return False

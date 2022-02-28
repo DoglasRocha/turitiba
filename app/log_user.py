@@ -20,17 +20,16 @@ class LogUser(User):
             
     def test_username(self, username: str) -> bool:
         
-        test_value = []
-        
         result = super().test_username(username, self.__messages)
-        test_value.append(result)
+        if not result:
+            return False
         
         response = self.__db.search_for_username(username)
-        if len(response) == 0 or username not in response[0]:
+        if len(response) == 0:
             self.__messages.append('Este nome de usuário não existe!!!')
-            test_value.append(False)
+            return False
             
-        return all(test_value)
+        return True
         
         
     def test_password(self, password: str) -> bool:

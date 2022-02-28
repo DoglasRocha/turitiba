@@ -1,3 +1,4 @@
+from helpers import login_required
 from new_user import NewUser
 from log_user import LogUser
 from update_user import UpdateUser
@@ -115,6 +116,7 @@ def register():
 
 
 @app.route('/user/<username>')
+@login_required
 def user(username: str):
     
     user_info = db.get_user_info(username)[0]
@@ -128,6 +130,7 @@ def user(username: str):
 
 
 @app.route('/update-user/<username>', methods=['POST'])
+@login_required
 def update_user(username):
     
     name = request.form.get('name') or ''

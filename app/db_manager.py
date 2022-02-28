@@ -46,24 +46,16 @@ class DBManager:
         connection.commit()
         
         connection.close()
-        
-        
-    def get_all_usernames(self) -> list:
+    
+    
+    def search_for_email(self, email: str) -> list:
         
         connection, cursor = self.create_connection()
         
-        usernames = cursor.execute('''SELECT username FROM users''').fetchall()
-        connection.commit()
-        connection.close()
-        
-        return usernames
-    
-    
-    def get_all_emails(self) -> list:
-        
-        connection, cursor = self.create_connection()
-        
-        emails = cursor.execute('''SELECT email FROM users''').fetchall()
+        emails = cursor.execute('''SELECT email 
+                                FROM users
+                                WHERE email = ?''',
+                                (email,)).fetchall()
         
         connection.commit()
         connection.close()

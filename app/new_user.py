@@ -38,43 +38,36 @@ class NewUser(User):
     
     def test_email(self, email: str) -> bool:
     
-        test_value = []
-    
         if not ('@' in email and '.' in email):
             
             self.__messages.append('E-mail inválido!!!')
-            test_value.append(False)        
+            return False        
     
-        all_emails = self.__db.get_all_emails()
-        for mail in all_emails:
+        result = self.__db.search_for_email(email)
+        if (len(result) > 0):
             
-            if (email == mail[0]):
+            self.__messages.append('Este email já foi cadastrado.')
+            return False
             
-                self.__messages.append('Este email já foi cadastrado.')
-                test_value.append(False)
-                break
-            
-        return all(test_value)
+        return True
     
     
     def test_username(self, username: str) -> bool:
         
-        test_value = []
-        
         result = super().test_username(
             username,
             self.__messages)
-        test_value.append(result)
         
-        all_usernames = self.__db.get_all_usernames()
-        for user in all_usernames:
-            
-            if (username == user[0]):
+        if not result:
+            return False
+        
+        result = self.__db.search_for_username(username)
+        if (len(result) > 0):
                 
-                self.__messages.append('Este nome de usuário já foi escolhido!!!')
-                test_value.append(False)
+            self.__messages.append('Este nome de usuário já foi escolhido!!!')
+            return False
                 
-        return all(test_value)
+        return True
     
     def test_password(self, password: str) -> bool:
         return super().test_password(password, self.__messages)
