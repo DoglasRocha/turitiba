@@ -9,7 +9,7 @@
 {% block body %}
 
     <article class="container-sm mt-5">
-        <form method="POST" action="/update-user">
+        <form method="POST" action="/update-user/{{ info.username }}">
             <div class="my-3 form-group">
                 <label for="name" class="form-label">Nome e Sobrenome</label>
                 <input type="text" class="form-control" id="name" name="name" aria-describedby="name" autocomplete="off"
@@ -43,7 +43,7 @@
                 <p id="confirm-password-alert" class="form-text text-danger">A confirmação de nova senha deve ser igual à nova senha</p>
             </div>
             <div class="my-3 form-group">
-                <input id="submit" type="submit" class="btn btn-primary mx-2" value="Atualizar" disabled>
+                <input id="submit" type="submit" class="btn btn-primary mx-2" value="Atualizar">
             </div>
         </form>
     </article>

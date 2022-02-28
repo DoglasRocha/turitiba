@@ -55,5 +55,5 @@ class User(metaclass=ABCMeta):
     
     
     @abstractmethod
-    def set_redirection(self, route: str) -> str:
+    def set_redirection(self, route: str) -> None:
         pass

@@ -115,3 +115,18 @@ class DBManager:
         connection.close()
         
         return user_info
+    
+    
+    def update_user(self, new_data: dict, username: str) -> None:
+        
+        connection, cursor = self.create_connection()
+        
+        for key, value in new_data.items():
+            
+            cursor.execute(f'''UPDATE users
+                           SET {key} = ?
+                           WHERE username = ?''',
+                           (value, username))
+            connection.commit()
+            
+        connection.close()

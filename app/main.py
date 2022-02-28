@@ -1,5 +1,6 @@
 from new_user import NewUser
 from log_user import LogUser
+from update_user import UpdateUser
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp, template
@@ -124,3 +125,27 @@ def user(username: str):
     }
     
     return render_template('user.html', info=info)
+
+
+@app.route('/update-user/<username>', methods=['POST'])
+def update_user(username):
+    
+    name = request.form.get('name') or ''
+    email = request.form.get('email') or ''
+    current_password = request.form.get('old-password') or ''
+    new_password = request.form.get('password') or ''
+    confirm_password = request.form.get('confirm-password') or ''
+    
+    # error checking
+    user = UpdateUser(name, email, username, current_password,
+                      new_password, confirm_password, db)
+    
+    if user.is_all_okay():
+        user.update_user_in_db()
+        
+    # flash messages
+    for message in user.get_messages():
+        flash(message)
+        
+    return redirect(user.get_redirection())
+
