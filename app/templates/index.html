@@ -7,7 +7,8 @@
 {% endblock %}
 
 {% block script %}
-    <script src="../static/owlcarousel/owlcarousel.min.js"></script>
+    <script defer src="../static/js/index.js"></script>
+    <script defer src="../static/owlcarousel/owlcarousel.min.js"></script>
     <script defer src="../static/js/carousel-index.js"></script>
 {% endblock %}
 
@@ -23,29 +24,19 @@
             saber antecipadamente o que cada localidade tem a seu dispor, e também verificar avaliações de outros usuários!
         </p>
     </section>
-    <section class="container my-4 text-light p-4" id="carousel">
+    <section class="container my-4 text-light p-4" id="carousel-frame">
         <h2 class="h3">
             Lugares mais famosos
         </h2>
-        <article class="owl-carousel owl-theme text-light">
-            <div class="item p-1">
-                <h4>Jardim Botânico</h4>
-                <figure>
-                    <img src="../static/img/botanico.jpg" alt="Jardim Botânico" width="400">
-                </figure>
-            </div>
-            <div class="item p-1">
-                <h4>Parque Barigui</h4>
-                <figure>
-                    <img src="../static/img/barigui.jpg" alt="Parque Barigui" width="400">
-                </figure>
-            </div>
-            <div class="item p-1">
-                <h4>Parque Tanguá</h4>
-                <figure>
-                    <img src="../static/img/tangua.jpg" alt="Parque Tanguá" width="400">
-                </figure>
-            </div>
+        <article class="owl-carousel owl-theme text-light" id="carousel">
+            {% for location in sample %}
+                <a class="item p-1 text-decoration-none" href="/location/{{ location.url_name }}">
+                    <h4 class="text-light">{{ location.name }}</h4>
+                    <figure>
+                        <img src="{{ location.path }}" alt="{{ location.name }}" width="600" height="200">
+                    </figure>
+                </a>
+            {% endfor %}
         </article>
     </section>
     <section class="container my-4">

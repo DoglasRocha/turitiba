@@ -122,3 +122,22 @@ class DBManager:
             connection.commit()
             
         connection.close()
+        
+        
+    def get_locations_samples(self) -> None:
+        
+        connection, cursor = self.create_connection()
+        
+        all_info = cursor.execute('''SELECT name, path
+                                  FROM locations
+                                  JOIN photos ON
+                                  photos.location_id = locations.id
+                                  ORDER BY path DESC'''
+                                  ).fetchall()
+        
+        connection.commit()
+        connection.close()
+        
+        return all_info
+        
+        

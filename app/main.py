@@ -2,6 +2,8 @@ from helpers import login_required
 from new_user import NewUser
 from log_user import LogUser
 from update_user import UpdateUser
+from urllib.parse import urlparse
+from requests import get
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp, template
@@ -36,9 +38,12 @@ db = DBManager('./turitiba.db')
 
 @app.route('/')
 def index():
-    '''Returns the template of the ‘/’ route. '''
+    '''Gets samples of the 10 most famous locations from the DB, then
+    renders the template, passing the sample as argument.'''
     
-    return render_template('index.html') 
+    data = sample().get_json()
+    
+    return render_template('index.html', sample=data) 
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -152,3 +157,27 @@ def update_user(username):
         
     return redirect(user.get_redirection())
 
+
+@app.route('/sample')
+def sample():
+    
+    sample = db.get_locations_samples()
+    names = []
+    paths = []
+    url_names = []
+    
+    for name, path in sample:
+        if name not in names:
+            names.append(name)
+            paths.append(path)
+            url_names.append(name.lower().replace(' ', '-'))
+    
+    organized_sample = []
+    for name, path, url_name in zip(names, paths, url_names):
+        organized_sample.append({
+            'name': name,
+            'path': path,
+            'url_name': url_name
+        })
+        
+    return jsonify(organized_sample)
