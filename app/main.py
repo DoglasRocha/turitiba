@@ -2,8 +2,6 @@ from helpers import login_required
 from new_user import NewUser
 from log_user import LogUser
 from update_user import UpdateUser
-from urllib.parse import urlparse
-from requests import get
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
 from tempfile import mkdtemp, template
@@ -162,6 +160,7 @@ def update_user(username):
 def sample():
     
     sample = db.get_locations_samples()
+    print(sample)
     names = []
     paths = []
     url_names = []
@@ -181,3 +180,15 @@ def sample():
         })
         
     return jsonify(organized_sample)
+
+
+def errorhandler(e):
+    """Handle error"""
+    if not isinstance(e, HTTPException):
+        e = InternalServerError()
+    return f'Name: {e.name}, code: {e.code}'
+    
+
+# Listen for errors
+for code in default_exceptions:
+    app.errorhandler(code)(errorhandler)

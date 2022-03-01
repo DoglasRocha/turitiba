@@ -132,7 +132,7 @@ class DBManager:
                                   FROM locations
                                   JOIN photos ON
                                   photos.location_id = locations.id
-                                  ORDER BY path DESC'''
+                                  ORDER BY likes, path DESC'''
                                   ).fetchall()
         
         connection.commit()
