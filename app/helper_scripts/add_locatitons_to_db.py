@@ -25,7 +25,7 @@ import wikipedia
              
 locations = ['Rua XV de Novembro (Curitiba)', 'Passeio Público (Curitiba)']
 
-connection = sql.connect('turitiba.db')
+connection = sql.connect('../turitiba.db')
 cursor = connection.cursor()
 
 for location in locations:
