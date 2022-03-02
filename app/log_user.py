@@ -62,7 +62,7 @@ class LogUser(User):
     
     def check_password_match(self) -> None:
         
-        p_hash = self.__db.get_password_hash_from_user(self.__username)[0][0]
+        p_hash = self.__db.get_password_hash_from_user(self.__username)[0]
         
         print(self.__password)
         if not check_password_hash(p_hash, self.__password):

@@ -55,7 +55,7 @@ class DBManager:
         emails = cursor.execute('''SELECT email 
                                 FROM users
                                 WHERE email = ?''',
-                                (email,)).fetchall()
+                                (email,)).fetchone()
         
         connection.commit()
         connection.close()
@@ -71,7 +71,7 @@ class DBManager:
             '''SELECT username
             FROM users
             WHERE username = ?''',
-            (username,)).fetchall()
+            (username,)).fetchone()
         
         connection.commit()
         connection.close()
@@ -86,7 +86,7 @@ class DBManager:
         p_hash = cursor.execute('''SELECT password_hash
                                 FROM users
                                 WHERE username = ?''',
-                                (username,)).fetchall()
+                                (username,)).fetchone()
         
         connection.commit()
         connection.close()
@@ -101,7 +101,7 @@ class DBManager:
         user_info = cursor.execute('''SELECT name, email
                                    FROM users
                                    WHERE username = ?''',
-                                   (username,)).fetchall()
+                                   (username,)).fetchone()
         
         connection.commit()
         connection.close()
@@ -139,5 +139,28 @@ class DBManager:
         connection.close()
         
         return all_info
+    
+    
+    def get_location_data(self, location_name: str) -> tuple:
         
+        connection, cursor = self.create_connection()
         
+        location_id = cursor.execute('''SELECT id
+                                     FROM locations
+                                     WHERE LOWER(name) = ?
+                                     ''',
+                                     (location_name,)).fetchone()
+
+        location_info = cursor.execute('''SELECT *
+                                       FROM locations
+                                       WHERE id = ?''',
+                                       location_id).fetchone()
+        
+        location_photos = cursor.execute('''SELECT path
+                                        FROM photos
+                                        WHERE location_id = ?''',
+                                        location_id).fetchall()
+        
+        connection.close()
+        
+        return location_info, location_photos

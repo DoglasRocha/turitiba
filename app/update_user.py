@@ -13,7 +13,7 @@ class UpdateUser(User):
         
         self.__db = db
         self.__username = username
-        self.__current_data = self.__db.get_user_info(username)[0]
+        self.__current_data = self.__db.get_user_info(username)
         self.__redirection = None
         self.__messages = []
         self.__new_data = {}
@@ -89,7 +89,7 @@ class UpdateUser(User):
     def old_password_match(self, old_password: str) -> bool:
         
         old_password_hash = self.__db.get_password_hash_from_user(
-            self.__username)[0][0]
+            self.__username)[0]
         
         if not check_password_hash(old_password_hash, old_password):
             

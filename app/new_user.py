@@ -61,7 +61,7 @@ class NewUser(User):
         if not result:
             return False
         
-        result = self.__db.search_for_username(username)
+        result = self.__db.search_for_username(username) 
         if (len(result) > 0):
                 
             self.__messages.append('Este nome de usuário já foi escolhido!!!')

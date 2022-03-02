@@ -122,7 +122,7 @@ def register():
 @login_required
 def user(username: str):
     
-    user_info = db.get_user_info(username)[0]
+    user_info = db.get_user_info(username)
     info = {
         'username': username,
         'name': user_info[0],
@@ -179,7 +179,17 @@ def sample():
             'url_name': url_name
         })
         
-    return jsonify(organized_sample)
+    return jsonify(organized_sample[:10])
+
+
+@app.route('/location/<location_name>')
+def location(location_name: str):
+    
+    normalized_name = location_name.replace('-', ' ')
+    
+    location_data = db.get_location_data(normalized_name)
+    return str(location_data)
+    
 
 
 def errorhandler(e):

@@ -31,10 +31,10 @@
         <article class="owl-carousel owl-theme text-light" id="carousel">
             {% for location in sample %}
                 <a class="item p-1 text-decoration-none" href="/location/{{ location.url_name }}">
-                    <h4 class="text-light">{{ location.name }}</h4>
                     <figure>
-                        <img src="{{ location.path }}" alt="{{ location.name }}" width="600" height="200">
+                        <img src="{{ location.path }}" alt="{{ location.name }}" width="600" height="300">
                     </figure>
+                    <h5 class="text-light">{{ location.name }}</h5>
                 </a>
             {% endfor %}
         </article>
