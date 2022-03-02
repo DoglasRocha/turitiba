@@ -147,11 +147,11 @@ class DBManager:
         
         location_id = cursor.execute('''SELECT id
                                      FROM locations
-                                     WHERE LOWER(name) = ?
+                                     WHERE name LIKE ?
                                      ''',
                                      (location_name,)).fetchone()
 
-        location_info = cursor.execute('''SELECT *
+        location_info = cursor.execute('''SELECT name, description, likes, maps_link, info
                                        FROM locations
                                        WHERE id = ?''',
                                        location_id).fetchone()

@@ -185,10 +185,36 @@ def sample():
 @app.route('/location/<location_name>')
 def location(location_name: str):
     
-    normalized_name = location_name.replace('-', ' ')
+    if location_name == 'ópera-de-arame':
+        normalized_name = 'Ópera de Arame'
+
+    else:
+        normalized_name = location_name.replace('-', ' ')
+        
+    data = location_data(normalized_name).get_json()
     
-    location_data = db.get_location_data(normalized_name)
-    return str(location_data)
+    return render_template('location.html', data=data)
+
+
+@app.route('/location-data/<location_name>')
+def location_data(location_name: str):
+    
+    info, photos = db.get_location_data(location_name)
+    
+    normalized_photos = []
+    for photo in photos:
+        normalized_photos.append('.' + photo[0])
+        
+    data = {
+        'name': info[0],
+        'description': info[1],
+        'likes': info[2],
+        'maps_link': info[3],
+        'info': info[4],
+        'photos': normalized_photos
+    }
+    
+    return jsonify(data)
 
 
 @app.route('/logout', methods=['POST'])
@@ -207,7 +233,7 @@ def main():
     return redirect('/')
 
 
-'''def errorhandler(e):
+def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
         e = InternalServerError()
@@ -216,4 +242,4 @@ def main():
 
 # Listen for errors
 for code in default_exceptions:
-    app.errorhandler(code)(errorhandler)'''
+    app.errorhandler(code)(errorhandler)

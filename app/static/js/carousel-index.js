@@ -1,13 +1,29 @@
-$('.owl-carousel').owlCarousel({
-    loop:true,
-    margin:10,
-    nav: true,
-    responsive:{
-        0:{
-            items:1
-        },
-        600:{
-            items:3
-        }
-    }
+new Glider(document.querySelector('.glider'), {
+  slidesToShow: 3.5,
+  draggable: true,
+  dots: '.dots',
+  arrows: {
+    prev: '.glider-prev',
+    next: '.glider-next'
+  },
+  responsive: [
+    {
+      breakpoint: 0,
+      settings: {
+        slidesToShow: 1.1
+      }
+    },
+    {
+      breakpoint: 600,
+      settings: {
+        slidesToShow: 2.1
+      }
+    },
+    {
+      breakpoint: 1000,
+      settings: {
+        slidesToShow: 3.5
+      }
+    },
+  ]
 });

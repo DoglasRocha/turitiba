@@ -2,13 +2,11 @@
 
 {% block style %}
     <link rel="stylesheet" href="../static/css/index.css">
-    <link rel="stylesheet" href="../static/owlcarousel/owlcarousel.min.css">
-    <link rel="stylesheet" href="../static/owlcarousel/">
+    <link rel="stylesheet" type="text/css" href="../static/glider/glider.min.css">
 {% endblock %}
 
 {% block script %}
-    <script defer src="../static/js/index.js"></script>
-    <script defer src="../static/owlcarousel/owlcarousel.min.js"></script>
+    <script defer src="../static/glider/glider.min.js"></script>
     <script defer src="../static/js/carousel-index.js"></script>
 {% endblock %}
 
@@ -28,15 +26,20 @@
         <h2 class="h3">
             Lugares mais famosos
         </h2>
-        <article class="owl-carousel owl-theme text-light" id="carousel">
-            {% for location in sample %}
-                <a class="item p-1 text-decoration-none" href="/location/{{ location.url_name }}">
-                    <figure>
-                        <img src="{{ location.path }}" alt="{{ location.name }}" width="600" height="300">
-                    </figure>
-                    <h5 class="text-light">{{ location.name }}</h5>
-                </a>
-            {% endfor %}
+        <article class="glider-contain">
+            <div class="glider text-light" id="carousel">
+                {% for location in sample %}
+                    <a class="p-1 text-decoration-none" href="/location/{{ location.url_name }}">
+                        <figure>
+                            <img src="{{ location.path }}" alt="{{ location.name }}" width="600" height="300">
+                        </figure>
+                        <h5 class="text-light">{{ location.name }}</h5>
+                    </a>
+                {% endfor %}
+            </div>
+            <button aria-label="Previous" class="glider-prev">«</button>
+            <button aria-label="Next" class="glider-next">»</button>
+            <div role="tablist" class="dots"></div>
         </article>
     </section>
     <section class="container my-4">

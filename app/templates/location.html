@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block style %}
+    <link rel="stylesheet" href="../static/glider/glider.min.css">
+    <link rel="stylesheet" href="../static/css/location.css">
+{% endblock %}
+
+{% block script %}
+    <script defer src="../static/glider/glider.min.js"></script>
+    <script defer src="../static/js/carousel-location.js"></script>
+{% endblock %}
+
+{% block body %}
+    <section class="container my-4">
+        <h1>{{ data.name }}</h1>
+        <section>
+            <article class="glider-contain p-4" id="carousel-frame">
+                <div class="glider">
+                    {% for path in data.photos %}
+                        <div class="p-1">
+                            <figure>
+                                <img src="{{ path }}" alt="{{ data.name }}" width="500" height="400">
+                            </figure>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button aria-label="Previous" class="glider-prev">«</button>
+                <button aria-label="Next" class="glider-next">»</button>
+                <div role="tablist" class="dots"></div>
+            </article>
+            <section>
+                {{ data.description}}
+                <br>
+                {{ data.likes }}
+                <br>
+                {{ data.maps_link }}
+                <br>
+                {{ data.info }}
+            </section>
+        </section>
+    </section>
+{% endblock body %}
