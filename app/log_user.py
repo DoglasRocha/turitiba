@@ -25,7 +25,7 @@ class LogUser(User):
             return False
         
         response = self.__db.search_for_username(username)
-        if len(response) == 0:
+        if response == None:
             self.__messages.append('Este nome de usuário não existe!!!')
             return False
             

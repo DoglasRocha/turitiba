@@ -189,10 +189,25 @@ def location(location_name: str):
     
     location_data = db.get_location_data(normalized_name)
     return str(location_data)
+
+
+@app.route('/logout', methods=['POST'])
+def logout():
     
+    callback = request.args.get('callback')
+    session.clear()
+    flash('Deslogado com sucesso!')
+    
+    return redirect(f'/{callback}')
+    
+    
+@app.route('/main')
+def main():
+    
+    return redirect('/')
 
 
-def errorhandler(e):
+'''def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
         e = InternalServerError()
@@ -201,4 +216,4 @@ def errorhandler(e):
 
 # Listen for errors
 for code in default_exceptions:
-    app.errorhandler(code)(errorhandler)
+    app.errorhandler(code)(errorhandler)'''

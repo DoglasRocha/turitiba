@@ -61,7 +61,7 @@ class UpdateUser(User):
             return False        
     
         result = self.__db.search_for_email(email)
-        if (len(result) > 0):
+        if (result != None):
             
             self.__messages.append('Este email já foi cadastrado.')
             return False

@@ -44,7 +44,7 @@ class NewUser(User):
             return False        
     
         result = self.__db.search_for_email(email)
-        if (len(result) > 0):
+        if result != None:
             
             self.__messages.append('Este email já foi cadastrado.')
             return False
@@ -62,7 +62,7 @@ class NewUser(User):
             return False
         
         result = self.__db.search_for_username(username) 
-        if (len(result) > 0):
+        if result != None:
                 
             self.__messages.append('Este nome de usuário já foi escolhido!!!')
             return False
