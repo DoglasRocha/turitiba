@@ -8,11 +8,24 @@
 {% block script %}
     <script defer src="../static/glider/glider.min.js"></script>
     <script defer src="../static/js/carousel-location.js"></script>
+    <script defer src="../static/js/heart-script.js"></script>
 {% endblock %}
 
 {% block body %}
     <section class="container my-4">
-        <h1>{{ data.name }}</h1>
+        <div class="d-flex justify-content-between">
+            <h1>{{ data.name }}</h1>
+            <div  class="d-flex">
+                <div id="heart">
+                    {% if user_has_liked %}
+                        <i class="fa-solid fa-heart"></i>
+                    {% else %}
+                        <i class="fa-regular fa-heart"></i>
+                    {% endif %}
+                </div>
+                <span id="likes">{{ data.likes }}</span>
+            </div>
+        </div>
         <section>
             <article class="glider-contain p-4" id="carousel-frame">
                 <div class="glider">
@@ -28,14 +41,29 @@
                 <button aria-label="Next" class="glider-next">»</button>
                 <div role="tablist" class="dots"></div>
             </article>
-            <section>
-                {{ data.description}}
-                <br>
-                {{ data.likes }}
-                <br>
-                {{ data.maps_link }}
-                <br>
-                {{ data.info }}
+            <section class="mt-4">
+                <ul>
+                    <li>    
+                        <h3>Descrição:</h3>
+                    </li>
+                    {{ data.description}}
+                    <br>
+                    <li>
+                        <h3>Likes:</h3>    
+                    </li>
+                    
+                    <br>
+                    <li>
+                        <h3>Endereço:</h3>
+                    </li>
+                    {{ data.maps_link }}
+                    <br>
+                    <li>
+                        <h3>Saiba mais:</h3>
+                    </li>
+                    {{ data.info }}
+                    <br>
+                </ul>
             </section>
         </section>
     </section>

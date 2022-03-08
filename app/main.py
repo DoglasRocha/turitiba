@@ -1,3 +1,4 @@
+from crypt import methods
 from helpers import login_required
 from new_user import NewUser
 from log_user import LogUser
@@ -33,6 +34,14 @@ Session(app)
 
 # db manager
 db = DBManager('./turitiba.db')
+
+
+def update_likes_in_all_locations():
+    
+    for id_ in db.get_all_locations_id():
+        
+        update_likes_count(id_[0])
+        
 
 @app.route('/')
 def index():
@@ -160,7 +169,6 @@ def update_user(username):
 def sample():
     
     sample = db.get_locations_samples()
-    print(sample)
     names = []
     paths = []
     url_names = []
@@ -184,16 +192,23 @@ def sample():
 
 @app.route('/location/<location_name>')
 def location(location_name: str):
-    
-    if location_name == 'ópera-de-arame':
-        normalized_name = 'Ópera de Arame'
-
-    else:
-        normalized_name = location_name.replace('-', ' ')
         
-    data = location_data(normalized_name).get_json()
+    data = location_data(location_name).get_json()
+    has_liked = user_has_liked(session.get('username'), location_name)
     
-    return render_template('location.html', data=data)
+    return render_template('location.html', data=data, user_has_liked=has_liked)
+
+
+def user_has_liked(username: str, location_route: str) -> bool:
+    
+    if (username):
+        user_id = db.get_user_id(username)[0]
+        location_id = db.get_location_id(location_route)[0]    
+        has_liked = db.search_for_like_in_location(user_id, location_id)
+    
+        return bool(has_liked)
+    
+    return False
 
 
 @app.route('/location-data/<location_name>')
@@ -233,13 +248,64 @@ def main():
     return redirect('/')
 
 
+@app.route('/manage-likes/<location>', methods=['POST'])
+@login_required
+def manage_likes(location: str) -> str:
+    
+    user_id = db.get_user_id(session['username'])[0]
+    location_id = db.get_location_id(location)[0]
+    
+    user_has_liked = db.search_for_like_in_location(user_id, location_id)
+    
+    if (user_has_liked):
+        
+        delete_like(user_id, location_id)
+        update_likes_count(location_id)
+        return ''
+        
+    
+    insert_like(user_id, location_id)
+    update_likes_count(location_id)
+    
+    return ''
+
+
+def delete_like(user_id: int, location_id: int) -> None:
+    
+    db.delete_like_in_location(user_id, location_id)
+    
+
+def insert_like(user_id: str, location_id: int) -> None:
+    
+    db.insert_like_in_location(user_id, location_id)
+    
+    
+def update_likes_count(location_id: int) -> None:
+    
+    likes_count = db.get_likes_in_location(location_id)[0]
+    
+    db.update_likes_in_location(location_id, likes_count)
+
+
+@app.route('/get-likes/<location_route>')
+def get_likes_from_location(location_route: str) -> int:
+    
+    location_id = db.get_location_id(location_route)[0]
+    likes = db.get_likes_in_location(location_id)[0]
+    
+    return jsonify({'likes': likes})
+
+
 def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
         e = InternalServerError()
     return f'Name: {e.name}, code: {e.code}'
     
+    
+update_likes_in_all_locations()
 
 # Listen for errors
 for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
+    

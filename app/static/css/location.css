@@ -2,3 +2,11 @@
 {
     background-color: #52663D;
 }
+
+#heart
+{
+    font-size: 30px;
+    color: red;
+    margin-right: 1rem;
+    cursor: pointer;
+}

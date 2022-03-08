@@ -10,9 +10,9 @@ class DBManager:
     def __init__(self, path_to_db: str) -> None:
         
         self.path_to_db = path_to_db
-        
     
-    def create_connection(self) -> tuple:
+    
+    def create_connection(self) -> None:
         '''
         Creates the connection with the database and the cursor,
         to avoid repetitive instructions.
@@ -25,6 +25,12 @@ class DBManager:
         
         return connection, cursor
         
+    
+    def close_connection(self, connection: object) -> None:
+        
+        connection.commit()
+        connection.close()
+    
     
     def add_user_to_db(self, username: str, name: str, email: str, 
                        password_hash: str) -> None:
@@ -43,9 +49,8 @@ class DBManager:
                        name,
                        email,
                        password_hash))
-        connection.commit()
         
-        connection.close()
+        self.close_connection(connection)
     
     
     def search_for_email(self, email: str) -> list:
@@ -57,8 +62,7 @@ class DBManager:
                                 WHERE email = ?''',
                                 (email,)).fetchone()
         
-        connection.commit()
-        connection.close()
+        self.close_connection(connection)
         
         return emails
         
@@ -73,8 +77,7 @@ class DBManager:
             WHERE username = ?''',
             (username,)).fetchone()
         
-        connection.commit()
-        connection.close()
+        self.close_connection(connection)
         
         return result
 
@@ -88,8 +91,7 @@ class DBManager:
                                 WHERE username = ?''',
                                 (username,)).fetchone()
         
-        connection.commit()
-        connection.close()
+        self.close_connection(connection)
         
         return p_hash
     
@@ -103,8 +105,7 @@ class DBManager:
                                    WHERE username = ?''',
                                    (username,)).fetchone()
         
-        connection.commit()
-        connection.close()
+        self.close_connection(connection)
         
         return user_info
     
@@ -119,9 +120,9 @@ class DBManager:
                            SET {key} = ?
                            WHERE username = ?''',
                            (value, username))
-            connection.commit()
+            self.connection.commit()
             
-        connection.close()
+        self.close_connection(connection)
         
         
     def get_locations_samples(self) -> None:
@@ -132,11 +133,10 @@ class DBManager:
                                   FROM locations
                                   JOIN photos ON
                                   photos.location_id = locations.id
-                                  ORDER BY likes, path DESC'''
+                                  ORDER BY likes DESC'''
                                   ).fetchall()
         
-        connection.commit()
-        connection.close()
+        self.close_connection(connection)
         
         return all_info
     
@@ -147,7 +147,7 @@ class DBManager:
         
         location_id = cursor.execute('''SELECT id
                                      FROM locations
-                                     WHERE name LIKE ?
+                                     WHERE route = ?
                                      ''',
                                      (location_name,)).fetchone()
 
@@ -161,6 +161,111 @@ class DBManager:
                                         WHERE location_id = ?''',
                                         location_id).fetchall()
         
-        connection.close()
+        self.close_connection(connection)
         
         return location_info, location_photos
+    
+    
+    def get_user_id(self, username: str) -> tuple:
+        
+        connection, cursor = self.create_connection()
+        
+        id_ = cursor.execute('''SELECT id
+                             FROM users
+                             WHERE username = ?''',
+                             (username,)).fetchone()
+        
+        self.close_connection(connection)
+        return id_
+    
+    
+    def get_location_id(self, location_route: str) -> tuple:
+        
+        connection, cursor = self.create_connection()
+        
+        id_ = cursor.execute('''SELECT id
+                             FROM locations
+                             WHERE route = ?''',
+                             (location_route,)).fetchone()
+        
+        self.close_connection(connection)
+        return id_
+    
+    
+    def search_for_like_in_location(self, user_id: int, 
+                                    location_id: int) -> tuple:
+        
+        connection, cursor = self.create_connection()
+        
+        result = cursor.execute('''SELECT *
+                                     FROM likes
+                                     WHERE user_id = ?
+                                     AND location_id = ?''',
+                                     (user_id, location_id)).fetchone()
+        
+        self.close_connection(connection)
+        
+        return result
+    
+    
+    def delete_like_in_location(self, user_id: int, 
+                                location_id: int) -> None:
+        
+        connection, cursor = self.create_connection()
+        cursor.execute('''DELETE FROM likes
+                          WHERE location_id = ?
+                          AND user_id = ?''',
+                          (user_id, location_id,))
+        connection.commit()
+        
+        self.close_connection(connection)
+        
+        
+    def insert_like_in_location(self, user_id: int,
+                                location_id: int) -> None:
+        
+        connection, cursor = self.create_connection()
+        
+        cursor.execute('''INSERT INTO likes(user_id, location_id)
+                            VALUES (?, ?)''',
+                            (user_id, location_id))
+        
+        self.close_connection(connection)
+        
+        
+    def get_likes_in_location(self, location_id: int) -> tuple:
+        
+        connection, cursor = self.create_connection()
+        
+        likes_count = cursor.execute('''SELECT COUNT(user_id)
+                                          FROM likes
+                                          WHERE location_id = ?''',
+                                          (location_id,)).fetchone()
+        
+        self.close_connection(connection)
+        
+        return likes_count
+    
+    
+    def update_likes_in_location(self, location_id: int,
+                                 likes_count: int) -> tuple:
+        
+        connection, cursor = self.create_connection()
+        
+        cursor.execute('''UPDATE locations
+                            SET likes = ?
+                            WHERE id = ?''',
+                            (likes_count, location_id))
+        
+        self.close_connection(connection)
+        
+        
+    def get_all_locations_id(self) -> list:
+        
+        connection, cursor = self.create_connection()
+        
+        result = cursor.execute('''SELECT id 
+                                FROM locations''').fetchall()
+        
+        self.close_connection(connection)
+        return result
