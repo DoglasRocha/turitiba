@@ -20,11 +20,15 @@ heart.addEventListener('click', () => {
     {
         heart.innerHTML = '<i class="fa-regular fa-heart"></i>';
     }
+
     
-    let likes_req = fetch(`/get-likes/${locationName}`);
-    likes_req
-        .then(resp => resp.json())
-        .then(resp => {
-            likes.textContent = resp['likes'];
-        });
+    setTimeout(() => {
+        let likes_req = fetch(`/get-likes/${locationName}`);
+        likes_req
+            .then(resp => resp.json())
+            .then(resp => {
+                likes.textContent = resp['likes'];
+            });
+    }, 1);
+    
 });

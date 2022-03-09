@@ -168,6 +168,8 @@ def update_user(username):
 @app.route('/sample')
 def sample():
     
+    update_likes_in_all_locations()
+    
     sample = db.get_locations_samples()
     names = []
     paths = []
@@ -201,14 +203,17 @@ def location(location_name: str):
 
 def user_has_liked(username: str, location_route: str) -> bool:
     
-    if (username):
-        user_id = db.get_user_id(username)[0]
-        location_id = db.get_location_id(location_route)[0]    
-        has_liked = db.search_for_like_in_location(user_id, location_id)
+    if not (username):
+        return False
     
-        return bool(has_liked)
+    user_id = db.get_user_id(username)[0]
+    location_id = db.get_location_id(location_route)[0]    
+    has_register = db.search_for_like_in_location(user_id, location_id)
+
+    if not (has_register):
+        return False
     
-    return False
+    return has_register[2]
 
 
 @app.route('/location-data/<location_name>')
@@ -255,11 +260,19 @@ def manage_likes(location: str) -> str:
     user_id = db.get_user_id(session['username'])[0]
     location_id = db.get_location_id(location)[0]
     
-    user_has_liked = db.search_for_like_in_location(user_id, location_id)
+    user_has_register = db.search_for_like_in_location(user_id, location_id)
     
-    if (user_has_liked):
+    if (user_has_register):
         
-        delete_like(user_id, location_id)
+        has_liked = user_has_register[2]
+        if (has_liked):
+        
+            unlike_location(user_id, location_id)
+            update_likes_count(location_id)
+            return ''
+        
+        
+        like_location(user_id, location_id)
         update_likes_count(location_id)
         return ''
         
@@ -270,9 +283,14 @@ def manage_likes(location: str) -> str:
     return ''
 
 
-def delete_like(user_id: int, location_id: int) -> None:
+def unlike_location(user_id: int, location_id: int) -> None:
     
-    db.delete_like_in_location(user_id, location_id)
+    db.unlike_location(user_id, location_id)
+    
+
+def like_location(user_id: int, location_id: int) -> None:
+    
+    db.like_location(user_id, location_id)
     
 
 def insert_like(user_id: str, location_id: int) -> None:
@@ -302,8 +320,6 @@ def errorhandler(e):
         e = InternalServerError()
     return f'Name: {e.name}, code: {e.code}'
     
-    
-update_likes_in_all_locations()
 
 # Listen for errors
 for code in default_exceptions:

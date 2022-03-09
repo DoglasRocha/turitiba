@@ -198,36 +198,51 @@ class DBManager:
         connection, cursor = self.create_connection()
         
         result = cursor.execute('''SELECT *
-                                     FROM likes
-                                     WHERE user_id = ?
-                                     AND location_id = ?''',
-                                     (user_id, location_id)).fetchone()
+                                FROM likes
+                                WHERE user_id = ?
+                                AND location_id = ?''',
+                                (user_id, location_id)).fetchone()
         
         self.close_connection(connection)
         
         return result
     
     
-    def delete_like_in_location(self, user_id: int, 
+    def unlike_location(self, user_id: int, 
                                 location_id: int) -> None:
         
         connection, cursor = self.create_connection()
-        cursor.execute('''DELETE FROM likes
-                          WHERE location_id = ?
-                          AND user_id = ?''',
-                          (user_id, location_id,))
+        
+        cursor.execute('''UPDATE likes
+                       SET is_liking = ?
+                       WHERE location_id = ?
+                       AND user_id = ?''',
+                       (0, location_id, user_id,))
         connection.commit()
         
         self.close_connection(connection)
         
+        
+    def like_location(self, user_id: int,
+                      location_id: int) -> None:
+        
+        connection, cursor = self.create_connection()
+        cursor.execute('''UPDATE likes
+                       SET is_liking = ?
+                       WHERE user_id = ?
+                       AND location_id = ?''',
+                       (1, user_id, location_id))
+        connection.commit()
+        
+        self.close_connection(connection)
         
     def insert_like_in_location(self, user_id: int,
                                 location_id: int) -> None:
         
         connection, cursor = self.create_connection()
         
-        cursor.execute('''INSERT INTO likes(user_id, location_id)
-                            VALUES (?, ?)''',
+        cursor.execute('''INSERT INTO likes(user_id, location_id, is_liking)
+                            VALUES (?, ?, 1)''',
                             (user_id, location_id))
         
         self.close_connection(connection)
@@ -238,9 +253,10 @@ class DBManager:
         connection, cursor = self.create_connection()
         
         likes_count = cursor.execute('''SELECT COUNT(user_id)
-                                          FROM likes
-                                          WHERE location_id = ?''',
-                                          (location_id,)).fetchone()
+                                        FROM likes
+                                        WHERE location_id = ?
+                                        AND is_liking = 1''',
+                                        (location_id,)).fetchone()
         
         self.close_connection(connection)
         
