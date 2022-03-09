@@ -9,6 +9,7 @@ from tempfile import mkdtemp, template
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from db_manager import DBManager
+from datetime import datetime
 
 # configure application
 app = Flask(__name__)
@@ -231,6 +232,7 @@ def location_data(location_name: str):
         'likes': info[2],
         'maps_link': info[3],
         'info': info[4],
+        'route': info[5],
         'photos': normalized_photos
     }
     
@@ -313,6 +315,25 @@ def get_likes_from_location(location_route: str) -> int:
     
     return jsonify({'likes': likes})
 
+
+@app.route('/comment/<location_route>', methods=['POST'])
+@login_required
+def comment(location_route: str) -> None:
+    
+    redirect_route = f'/location/{location_route}'
+    user_comment = request.form.get('comment')
+    user_id = db.get_user_id(session['username'])[0]
+    location_id = db.get_location_id(location_route)[0]
+    date = datetime.now()
+    
+    db.insert_comment_in_location(
+        user_comment, 
+        user_id, 
+        location_id, 
+        date
+    )
+    
+    return redirect(redirect_route)
 
 def errorhandler(e):
     """Handle error"""

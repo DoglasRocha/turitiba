@@ -42,24 +42,38 @@
                 <div role="tablist" class="dots"></div>
             </article>
             <section class="mt-4">
-                <ul>
-                    <li>    
-                        <h3>Descrição:</h3>
-                    </li>
-                    {{ data.description}}
-                    <br>
-                    <li>
-                        <h3>Endereço:</h3>
-                    </li>
-                    {{ data.maps_link }}
-                    <br>
-                    <li>
-                        <h3>Saiba mais:</h3>
-                    </li>
-                    {{ data.info }}
-                    <br>
-                </ul>
+                <article class="container row">
+                    <ul class="col">
+                        <li>
+                            <h3>Descrição:</h3>
+                            {{ data.description }}
+                        </li>
+                    </ul>
+                    <ul class="col">
+                        <li>
+                            <h3>Endereço:</h3>
+                            {{ data.maps_link }}
+                        </li>
+                        <br>
+                        <li>
+                            <h3>Saiba mais:</h3>
+                            {{ data.info }}
+                        </li>
+                        <br>
+                    </ul>
+                </article>
             </section>
+        </section>
+        <section class="container">
+            <form action="/comment/{{ data.route }}" method="POST">
+                <div class="mb-1 form-group">
+                    <input type="text" class="form-control" id="comment" name="comment" aria-describedby="comment"
+                    placeholder="Deixe aqui seu comentário sobre {{ data.name }}!" autocomplete="off">
+                </div>
+                <div class="mb-4 form-group">
+                    <input type="submit" class="btn btn-primary" value="Fazer comentário">
+                </div>
+            </form>
         </section>
     </section>
 {% endblock body %}

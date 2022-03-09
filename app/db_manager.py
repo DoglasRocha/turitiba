@@ -151,7 +151,7 @@ class DBManager:
                                      ''',
                                      (location_name,)).fetchone()
 
-        location_info = cursor.execute('''SELECT name, description, likes, maps_link, info
+        location_info = cursor.execute('''SELECT name, description, likes, maps_link, info, route
                                        FROM locations
                                        WHERE id = ?''',
                                        location_id).fetchone()
@@ -285,3 +285,20 @@ class DBManager:
         
         self.close_connection(connection)
         return result
+    
+    
+    def insert_comment_in_location(self, comment: str, user_id: int, 
+                                   location_id: int, date) -> None:
+        
+        connection, cursor = self.create_connection()
+        
+        cursor.execute('''INSERT INTO comments
+                       VALUES (?, ?, ?, ?)''',
+                       (comment, 
+                        user_id, 
+                        location_id, 
+                        date))
+        
+        connection.commit()
+        
+        self.close_connection(connection)
