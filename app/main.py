@@ -312,6 +312,16 @@ def delete_comment(location_route: str) -> None:
     db.delete_comment(user_id, location_id, comment)
     
     return redirect(f'/location/{location_route}')
+
+
+@app.route('/search')
+def search():
+    
+    user_search = request.args.get('q')
+    
+    result = Reader.search(db, user_search)
+    
+    return str(result)
     
 
 def errorhandler(e):

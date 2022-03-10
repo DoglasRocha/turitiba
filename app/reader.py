@@ -118,7 +118,7 @@ class Reader:
     
     @staticmethod
     def get_comments_from_location(db: DBManager, 
-                                   location_route: str) -> dict:
+                                   location_route: str) -> list:
         
         location_id = Reader.get_location_id(db, location_route)
         raw_data = db.get_comments_from_location(location_id)
@@ -150,5 +150,34 @@ class Reader:
         
         formatted_date = f'{day}/{month}/{year} {hour}'
         return formatted_date
+    
+    
+    @staticmethod
+    def search(db: DBManager, user_search: str) -> list:
+        
+        raw_search = db.search_for_location(user_search)
+        names = []
+        paths = []
+        routes = []
+        descriptions = []
+        
+        for name, path, route, description in raw_search:
+            if name not in names:
+                names.append(name)
+                paths.append(path)
+                routes.append(route)
+                descriptions.append(f'{description[:100]}...')
+                
+        treated_search = []
+        for name, path, route, description in zip(names, paths, 
+                                                  routes, descriptions):
+            treated_search.append({
+                'name': name,
+                'path': path,
+                'route': route,
+                'description': description
+            })
+            
+        return treated_search
         
         

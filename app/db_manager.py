@@ -343,3 +343,20 @@ class DBManager:
         connection.commit()
         
         connection.close()
+        
+        
+    def search_for_location(self, query: str) -> list:
+        
+        connection, cursor = self.create_connection()
+        
+        all_info = cursor.execute('''SELECT name, path, route, description
+                                  FROM locations
+                                  JOIN photos ON
+                                  photos.location_id = locations.id
+                                  WHERE name LIKE ?
+                                  ORDER BY path DESC''',
+                                  (f'%{query}%',)).fetchall()
+        
+        self.close_connection(connection)
+        
+        return all_info
