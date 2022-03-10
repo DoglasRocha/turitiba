@@ -164,9 +164,9 @@ class Reader:
         for name, path, route, description in raw_search:
             if name not in names:
                 names.append(name)
-                paths.append(path)
+                paths.append('.' + path)
                 routes.append(route)
-                descriptions.append(f'{description[:100]}...')
+                descriptions.append(f'{description[:300]}...')
                 
         treated_search = []
         for name, path, route, description in zip(names, paths, 
@@ -179,5 +179,15 @@ class Reader:
             })
             
         return treated_search
+    
+    
+    @staticmethod
+    def search_names(db, user_search: str) -> list:
         
+        untreated_names = db.search_location_names(user_search)
         
+        names = []
+        for name in untreated_names:
+            names.append(name[0])
+        
+        return names

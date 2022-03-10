@@ -78,32 +78,34 @@
                 </form>
             </section>
         {% endif %}
-        <section class="container">
-            <h3>Comentários</h3>
-            {% for comment in comments %}
-                <div class="card mb-2">
-                    <div class="card-body">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <h5 class="card-title">{{ comment.name }}</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{ comment.username }}</h6>
+        {% if comments %}
+            <section class="container">
+                <h3>Comentários</h3>
+                {% for comment in comments %}
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <h5 class="card-title">{{ comment.name }}</h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ comment.username }}</h6>
+                                </div>
+                                <div class="d-flex flex-column align-items-end">
+                                    <h6 class="card-subtitle mb-2 text-muted">{{ comment.date }}</h6>
+                                    {% if session.username == comment.username %}
+                                        <form action="/delete-comment/{{ data.route }}" method="post">
+                                            <input type="hidden" name="user_id" value="{{ comment.user_id }}">
+                                            <input type="hidden" name="location_id" value="{{ comment.location_id }}">
+                                            <input type="hidden" name="comment" value="{{ comment.comment }}">
+                                            <input type="submit" class="btn btn-primary" value="Excluir">
+                                        </form>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="d-flex flex-column align-items-end">
-                                <h6 class="card-subtitle mb-2 text-muted">{{ comment.date }}</h6>
-                                {% if session.username == comment.username %}
-                                    <form action="/delete-comment/{{ data.route }}" method="post">
-                                        <input type="hidden" name="user_id" value="{{ comment.user_id }}">
-                                        <input type="hidden" name="location_id" value="{{ comment.location_id }}">
-                                        <input type="hidden" name="comment" value="{{ comment.comment }}">
-                                        <input type="submit" class="btn btn-primary" value="Excluir">
-                                    </form>
-                                {% endif %}
-                            </div>
+                        <p class="card-text">{{ comment.comment }}</p>
                         </div>
-                    <p class="card-text">{{ comment.comment }}</p>
                     </div>
-                </div>
-            {% endfor %}
-        </section>
+                {% endfor %}
+            </section>
+        {% endif %}
     </section>
 {% endblock body %}

@@ -317,11 +317,20 @@ def delete_comment(location_route: str) -> None:
 @app.route('/search')
 def search():
     
-    user_search = request.args.get('q')
+    user_search = request.args.get('q') or ''
     
     result = Reader.search(db, user_search)
     
-    return str(result)
+    return render_template('search.html', search=result)
+
+
+@app.route('/search-bar')
+def search_bar():
+    
+    user_search = request.args.get('q') or ''
+    
+    result = Reader.search_names(db, user_search)
+    return jsonify(result)
     
 
 def errorhandler(e):

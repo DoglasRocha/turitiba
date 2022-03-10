@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+    <section class="container">
+        {% for result in search %}
+            <div class="card my-3">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="{{ result.path }}" alt="{{ result.name }}" height="200" width="300">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <a href="/location/{{ result.route }}">
+                                <h3 class="card-title">{{ result.name }}</h3>
+                            </a>
+                            <p class="card-text">{{ result.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </section>
+
+{% endblock body %}
+

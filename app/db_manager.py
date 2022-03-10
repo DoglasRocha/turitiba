@@ -360,3 +360,17 @@ class DBManager:
         self.close_connection(connection)
         
         return all_info
+    
+    
+    def search_location_names(self, search) -> list:
+        
+        connection, cursor = self.create_connection()
+        
+        result = cursor.execute('''SELECT name
+                                FROM locations
+                                WHERE name LIKE ?''', 
+                                (f'%{search}%',)).fetchall()
+        
+        self.close_connection(connection)
+        
+        return result

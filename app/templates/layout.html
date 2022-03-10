@@ -11,6 +11,7 @@
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
         <script src="https://kit.fontawesome.com/00bcb3a799.js" crossorigin="anonymous"></script>
+        <script defer src="../static/js/search-bar.js"></script>
         {% block script %}{% endblock %}
     </head>
     <body>
@@ -33,14 +34,15 @@
                                 <li><a class="dropdown-item" href="/search?q=parque">Parques</a></li>
                                 <li><a class="dropdown-item" href="/search?q=museu">Museus</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="#">Todos</a></li>
+                                <li><a class="dropdown-item" href="/search">Todos</a></li>
                             </ul>
                         </li>
                     </ul>
                     <div class="navbar-nav d-flex">
                         <form action="/search" method="get" class="d-flex mx-4">
                             <input class="form-control me-2" type="search" placeholder="Pesquisar ponto turístico..." aria-label="Search"
-                                name="q">
+                                name="q" id="search-bar" list="places" autocomplete="off">
+                                <datalist id="places"></datalist>
                             <button class="btn btn-outline-success" type="submit">Pesquisar</button>
                           </form>
                         {% if session.username %}
