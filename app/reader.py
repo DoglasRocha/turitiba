@@ -28,8 +28,8 @@ class Reader:
     
     
     @staticmethod
-    def get_sample_locations_sample(db: DBManager, 
-                                    size_of_the_sample: int) -> list:
+    def get_locations_sample(db: DBManager, 
+                             size_of_the_sample: int) -> list:
         
         raw_sample = db.get_locations_samples()
         names = []
@@ -114,3 +114,41 @@ class Reader:
         likes = db.get_likes_in_location(location_id)[0]
         
         return likes
+    
+    
+    @staticmethod
+    def get_comments_from_location(db: DBManager, 
+                                   location_route: str) -> dict:
+        
+        location_id = Reader.get_location_id(db, location_route)
+        raw_data = db.get_comments_from_location(location_id)
+        
+        treated_data = []
+        for data in raw_data:
+            
+            comment, user_id, location_id, date = data
+            formatted_date = Reader.format_date(date)
+            Reader.format_date(date)
+            name, username = db.get_user_info_to_comments(user_id)
+            treated_data.append({
+                'comment': comment,
+                'date': formatted_date,
+                'name': name,
+                'username': username,
+                'user_id': user_id, 
+                'location_id': location_id
+            })
+            
+        return treated_data
+    
+    
+    @staticmethod
+    def format_date(date: str):
+        
+        year, month, day = tuple(date.split(' ')[0].split('-'))
+        hour = date.split(' ')[1][:5]
+        
+        formatted_date = f'{day}/{month}/{year} {hour}'
+        return formatted_date
+        
+        

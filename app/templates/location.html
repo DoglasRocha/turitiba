@@ -64,16 +64,46 @@
                 </article>
             </section>
         </section>
+        {% if session %}
+            <section class="container">
+                <h3>Faça seu comentário:</h3>
+                <form action="/comment/{{ data.route }}" method="POST">
+                    <div class="mb-1 form-group">
+                        <input type="text" class="form-control" id="comment" name="comment" aria-describedby="comment"
+                        placeholder="Deixe aqui seu comentário sobre {{ data.name }}!" autocomplete="off">
+                    </div>
+                    <div class="mb-4 form-group">
+                        <input type="submit" class="btn btn-primary" value="Fazer comentário">
+                    </div>
+                </form>
+            </section>
+        {% endif %}
         <section class="container">
-            <form action="/comment/{{ data.route }}" method="POST">
-                <div class="mb-1 form-group">
-                    <input type="text" class="form-control" id="comment" name="comment" aria-describedby="comment"
-                    placeholder="Deixe aqui seu comentário sobre {{ data.name }}!" autocomplete="off">
+            <h3>Comentários</h3>
+            {% for comment in comments %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <h5 class="card-title">{{ comment.name }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ comment.username }}</h6>
+                            </div>
+                            <div class="d-flex flex-column align-items-end">
+                                <h6 class="card-subtitle mb-2 text-muted">{{ comment.date }}</h6>
+                                {% if session.username == comment.username %}
+                                    <form action="/delete-comment/{{ data.route }}" method="post">
+                                        <input type="hidden" name="user_id" value="{{ comment.user_id }}">
+                                        <input type="hidden" name="location_id" value="{{ comment.location_id }}">
+                                        <input type="hidden" name="comment" value="{{ comment.comment }}">
+                                        <input type="submit" class="btn btn-primary" value="Excluir">
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    <p class="card-text">{{ comment.comment }}</p>
+                    </div>
                 </div>
-                <div class="mb-4 form-group">
-                    <input type="submit" class="btn btn-primary" value="Fazer comentário">
-                </div>
-            </form>
+            {% endfor %}
         </section>
     </section>
 {% endblock body %}

@@ -106,7 +106,19 @@ class DBManager:
                                    (username,)).fetchone()
         
         self.close_connection(connection)
+        return user_info
+    
+    
+    def get_user_info_to_comments(self, user_id: int) -> tuple:
         
+        connection, cursor = self.create_connection()
+        
+        user_info = cursor.execute('''SELECT name, username
+                                   FROM users
+                                   WHERE id = ?''',
+                                   (user_id,)).fetchone()
+        
+        self.close_connection(connection)
         return user_info
     
     
@@ -302,3 +314,32 @@ class DBManager:
         connection.commit()
         
         self.close_connection(connection)
+        
+        
+    def get_comments_from_location(self, location_id: int) -> list:
+        
+        connection, cursor = self.create_connection()
+        
+        comments = cursor.execute('''SELECT *
+                                  FROM comments
+                                  WHERE location_id = ?
+                                  ORDER BY date DESC''',
+                                  (location_id,)).fetchall()
+        
+        self.close_connection(connection)
+        return comments
+    
+    
+    def delete_comment(self, user_id: int, location_id: int,
+                       comment: str) -> None:
+        
+        connection, cursor = self.create_connection()
+        
+        cursor.execute('''DELETE FROM comments
+                       WHERE user_id = ? 
+                       AND location_id = ?
+                       AND comment = ?''',
+                       (user_id, location_id, comment))
+        connection.commit()
+        
+        connection.close()

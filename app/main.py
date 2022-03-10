@@ -167,18 +167,22 @@ def sample():
     
     update_likes_in_all_locations()
     
-    sample = Reader.get_sample_locations_sample(db, 10)
+    sample = Reader.get_locations_sample(db, 10)
         
     return jsonify(sample)
 
 
-@app.route('/location/<location_name>')
-def location(location_name: str):
+@app.route('/location/<location_route>')
+def location(location_route: str):
         
-    data = location_data(location_name).get_json()
-    has_liked = user_has_liked(session.get('username'), location_name)
+    data = location_data(location_route).get_json()
+    has_liked = user_has_liked(session.get('username'), location_route)
+    comments = Reader.get_comments_from_location(db, location_route)
     
-    return render_template('location.html', data=data, user_has_liked=has_liked)
+    return render_template('location.html', 
+                           data=data, 
+                           user_has_liked=has_liked,
+                           comments=comments)
 
 
 @app.route('/location-data/<location_route>')
@@ -297,6 +301,18 @@ def comment(location_route: str) -> None:
     )
     
     return redirect(redirect_route)
+
+@app.route('/delete-comment/<location_route>', methods=['POST'])
+def delete_comment(location_route: str) -> None:
+    
+    user_id = int(request.form.get('user_id'))
+    location_id = int(request.form.get('location_id'))
+    comment = request.form.get('comment')
+    
+    db.delete_comment(user_id, location_id, comment)
+    
+    return redirect(f'/location/{location_route}')
+    
 
 def errorhandler(e):
     """Handle error"""
