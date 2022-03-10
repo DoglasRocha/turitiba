@@ -129,7 +129,7 @@ class DBManager:
         
         connection, cursor = self.create_connection()
         
-        all_info = cursor.execute('''SELECT name, path
+        all_info = cursor.execute('''SELECT name, path, route
                                   FROM locations
                                   JOIN photos ON
                                   photos.location_id = locations.id
@@ -197,7 +197,7 @@ class DBManager:
         
         connection, cursor = self.create_connection()
         
-        result = cursor.execute('''SELECT *
+        result = cursor.execute('''SELECT is_liking
                                 FROM likes
                                 WHERE user_id = ?
                                 AND location_id = ?''',

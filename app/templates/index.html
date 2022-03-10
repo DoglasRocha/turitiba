@@ -29,7 +29,7 @@
         <article class="glider-contain">
             <div class="glider text-light" id="carousel">
                 {% for location in sample %}
-                    <a class="p-1 text-decoration-none" href="/location/{{ location.url_name }}">
+                    <a class="p-1 text-decoration-none" href="/location/{{ location.route }}">
                         <figure>
                             <img src="{{ location.path }}" alt="{{ location.name }}" width="600" height="300">
                         </figure>

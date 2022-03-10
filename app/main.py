@@ -10,6 +10,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from db_manager import DBManager
 from datetime import datetime
+from reader import Reader
 
 # configure application
 app = Flask(__name__)
@@ -132,14 +133,9 @@ def register():
 @login_required
 def user(username: str):
     
-    user_info = db.get_user_info(username)
-    info = {
-        'username': username,
-        'name': user_info[0],
-        'email': user_info[1]
-    }
+    user_info = Reader.get_user_info(db, username)
     
-    return render_template('user.html', info=info)
+    return render_template('user.html', info=user_info)
 
 
 @app.route('/update-user/<username>', methods=['POST'])
@@ -171,26 +167,9 @@ def sample():
     
     update_likes_in_all_locations()
     
-    sample = db.get_locations_samples()
-    names = []
-    paths = []
-    url_names = []
-    
-    for name, path in sample:
-        if name not in names:
-            names.append(name)
-            paths.append(path)
-            url_names.append(name.lower().replace(' ', '-'))
-    
-    organized_sample = []
-    for name, path, url_name in zip(names, paths, url_names):
-        organized_sample.append({
-            'name': name,
-            'path': path,
-            'url_name': url_name
-        })
+    sample = Reader.get_sample_locations_sample(db, 10)
         
-    return jsonify(organized_sample[:10])
+    return jsonify(sample)
 
 
 @app.route('/location/<location_name>')
@@ -202,41 +181,20 @@ def location(location_name: str):
     return render_template('location.html', data=data, user_has_liked=has_liked)
 
 
+@app.route('/location-data/<location_route>')
+def location_data(location_route: str):
+    
+    data = Reader.get_location_data(db, location_route)
+    
+    return jsonify(data)
+
+
 def user_has_liked(username: str, location_route: str) -> bool:
     
     if not (username):
         return False
     
-    user_id = db.get_user_id(username)[0]
-    location_id = db.get_location_id(location_route)[0]    
-    has_register = db.search_for_like_in_location(user_id, location_id)
-
-    if not (has_register):
-        return False
-    
-    return has_register[2]
-
-
-@app.route('/location-data/<location_name>')
-def location_data(location_name: str):
-    
-    info, photos = db.get_location_data(location_name)
-    
-    normalized_photos = []
-    for photo in photos:
-        normalized_photos.append('.' + photo[0])
-        
-    data = {
-        'name': info[0],
-        'description': info[1],
-        'likes': info[2],
-        'maps_link': info[3],
-        'info': info[4],
-        'route': info[5],
-        'photos': normalized_photos
-    }
-    
-    return jsonify(data)
+    return Reader.user_has_liked(db, username, location_route)
 
 
 @app.route('/logout', methods=['POST'])
@@ -255,34 +213,39 @@ def main():
     return redirect('/')
 
 
-@app.route('/manage-likes/<location>', methods=['POST'])
+@app.route('/manage-likes/<location_route>', methods=['POST'])
 @login_required
-def manage_likes(location: str) -> str:
+def manage_likes(location_route: str) -> str:
     
-    user_id = db.get_user_id(session['username'])[0]
-    location_id = db.get_location_id(location)[0]
+    user_id = Reader.get_user_id(db, session['username'])
+    location_id = Reader.get_location_id(db, location_route)
     
-    user_has_register = db.search_for_like_in_location(user_id, location_id)
+    user_has_register = Reader.user_has_register_in_likes_table(
+        db, session['username'], location_route
+    )
     
-    if (user_has_register):
+    if not (user_has_register):
         
-        has_liked = user_has_register[2]
-        if (has_liked):
-        
-            unlike_location(user_id, location_id)
-            update_likes_count(location_id)
-            return ''
-        
-        
-        like_location(user_id, location_id)
+        insert_like(user_id, location_id)
         update_likes_count(location_id)
         return ''
         
+        
+    has_liked = Reader.user_has_liked(
+        db, session['username'], location_route
+    )
     
-    insert_like(user_id, location_id)
+    if (has_liked):
+    
+        unlike_location(user_id, location_id)
+        update_likes_count(location_id)
+        return ''
+    
+    
+    like_location(user_id, location_id)
     update_likes_count(location_id)
-    
     return ''
+        
 
 
 def unlike_location(user_id: int, location_id: int) -> None:
@@ -302,7 +265,7 @@ def insert_like(user_id: str, location_id: int) -> None:
     
 def update_likes_count(location_id: int) -> None:
     
-    likes_count = db.get_likes_in_location(location_id)[0]
+    likes_count = Reader.get_likes_in_location(db, location_id)
     
     db.update_likes_in_location(location_id, likes_count)
 
@@ -310,8 +273,8 @@ def update_likes_count(location_id: int) -> None:
 @app.route('/get-likes/<location_route>')
 def get_likes_from_location(location_route: str) -> int:
     
-    location_id = db.get_location_id(location_route)[0]
-    likes = db.get_likes_in_location(location_id)[0]
+    location_id = Reader.get_location_id(db, location_route)
+    likes = Reader.get_likes_in_location(db, location_id)
     
     return jsonify({'likes': likes})
 
@@ -322,8 +285,8 @@ def comment(location_route: str) -> None:
     
     redirect_route = f'/location/{location_route}'
     user_comment = request.form.get('comment')
-    user_id = db.get_user_id(session['username'])[0]
-    location_id = db.get_location_id(location_route)[0]
+    user_id = Reader.get_user_id(db, session['username'])
+    location_id = Reader.get_location_id(db, location_route)
     date = datetime.now()
     
     db.insert_comment_in_location(
