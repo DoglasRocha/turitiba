@@ -1,5 +1,11 @@
 {% extends 'layout.html' %}
 
+{% block style %}
+
+    <link rel="stylesheet" href="../static/css/forms.css">    
+
+{% endblock style %}
+
 {% block script %}
 
     <script defer src="../static/js/register.js"></script>
@@ -8,35 +14,35 @@
 
 {% block body %}
 
-    <article class="container-sm mt-5">
+    <article class="container-sm mt-5 form-box">
         <form method="POST" action="/register">
             <div class="my-3 form-group">
                 <label for="name" class="form-label">Nome e Sobrenome</label>
-                <input type="text" class="form-control" id="name" name="name" aria-describedby="name" autocomplete="off">
+                <input type="text" class="form-control" id="name" name="name" aria-describedby="name" autocomplete="off" required>
                 <p id="name-alert" class="form-text text-danger">Digite seu nome e seu sobrenome</p>
             </div>
             <div class="my-3 form-group">
                 <label for="email" class="form-label">E-Mail</label>
-                <input type="email" class="form-control" id="email" name="email" aria-describedby="email" autocomplete="off">
+                <input type="email" class="form-control" id="email" name="email" aria-describedby="email" autocomplete="off" required>
                 <p id="email-alert" class="form-text text-danger">Digite seu email</p>
             </div>
             <div class="my-3 form-group">
                 <label for="username" class="form-label">Nome de Usuário</label>
-                <input type="text" class="form-control" id="username" name="username" aria-describedby="username" autocomplete="off">
+                <input type="text" class="form-control" id="username" name="username" aria-describedby="username" autocomplete="off" required>
                 <p id="username-alert" class="form-text text-danger">Digite seu nome de usuário. Ele não deve conter espaços.</p>
             </div>
             <div class="my-3 form-group">
                 <label for="password" class="form-label">Senha</label>
-                <input type="password" class="form-control" id="password" autocomplete="off" name="password">
+                <input type="password" class="form-control" id="password" autocomplete="off" name="password" required>
                 <p id="password-alert" class="form-text text-danger">Sua senha deve conter 8 caracteres</p>
             </div>
             <div class="my-3 form-group">
                 <label for="confrim-password" class="form-label">Confirmação da Senha</label>
-                <input type="password" class="form-control" id="confirm-password" autocomplete="off" name="confirm-password">
+                <input type="password" class="form-control" id="confirm-password" autocomplete="off" name="confirm-password" required>
                 <p id="confirm-password-alert" class="form-text text-danger">A confirmação da senha deve ser igual à senha</p>
             </div>
             <div class="my-3 form-group">
-                <input id="submit" type="submit" class="btn btn-primary mx-2" value="Cadastrar" disabled>
+                <input id="submit" type="submit" class="btn btn-primary mx-2" value="Cadastrar">
             </div>
         </form>
     </article>
