@@ -16,15 +16,13 @@ function instanceUsernameChecker()
         if (!username.value.includes(' ') && username.value.length > 0)
         {
             usernameAlert.classList.add('invisible')
-            elementsRules['username'] = true;
+
         }
         else if (usernameAlert.classList.contains('invisible'))
         {
             usernameAlert.classList.remove('invisible');
-            elementsRules['username'] = false;
         }
 
-        submitButtonRuler();
     });
 
 }
@@ -41,44 +39,13 @@ function instancePasswordChecker()
         if (password.value.length >= 8)
         {
             passwordAlert.classList.add('invisible');
-            elementsRules['password'] = true;
         }
         else if (passwordAlert.classList.contains('invisible'))
         {
             passwordAlert.classList.remove('invisible');
-            elementsRules['password'] = false;
         }
 
-        submitButtonRuler();
     });
 }
-
-
-// submit button ruler
-function submitButtonRuler()
-{
-    let sum = 0;
-
-    allElements.forEach(element => {
-
-        sum += elementsRules[element] ? 1 : 0;
-
-    });
-
-    let submitButton = document.querySelector('#submit');
-
-    submitButton.disabled = !(sum === allElements.length);
-
-}
-
-let allElements = ['username', 'password'];
-let elementsRules = {};
-
-allElements.forEach(element => {
-    
-    elementsRules[element] = false;
-
-});
-
 
 main();
