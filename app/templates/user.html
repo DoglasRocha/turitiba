@@ -1,5 +1,11 @@
 {% extends 'layout.html' %}
 
+{% block style %}
+    
+    <link rel="stylesheet" href="../static/css/forms.css">
+
+{% endblock style %}
+
 {% block script %}
 
     <script defer src="../static/js/user.js"></script>
@@ -8,7 +14,7 @@
 
 {% block body %}
 
-    <article class="container-sm mt-5">
+    <article class="container-sm mt-5 form-box">
         <form method="POST" action="/update-user/{{ info.username }}">
             <div class="my-3 form-group">
                 <label for="name" class="form-label">Nome e Sobrenome</label>
@@ -43,7 +49,7 @@
                 <p id="confirm-password-alert" class="form-text text-danger">A confirmação de nova senha deve ser igual à nova senha</p>
             </div>
             <div class="my-3 form-group">
-                <input id="submit" type="submit" class="btn btn-primary mx-2" value="Atualizar">
+                <input id="submit" type="submit" class="btn button text-light mx-2" value="Atualizar">
             </div>
         </form>
     </article>
