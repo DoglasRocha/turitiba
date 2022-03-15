@@ -27,7 +27,7 @@
             </div>
         </div>
         <section>
-            <article class="glider-contain p-4" id="carousel-frame">
+            <article class="glider-contain p-4 dark-background">
                 <div class="glider">
                     {% for path in data.photos %}
                         <div class="p-1">
@@ -41,67 +41,77 @@
                 <button aria-label="Next" class="glider-next">»</button>
                 <div role="tablist" class="dots"></div>
             </article>
-            <section class="mt-4">
+            <section class="mt-5 p-4 dark-background text-light">
                 <article class="container row">
                     <ul class="col">
                         <li>
                             <h3>Descrição:</h3>
-                            {{ data.description }}
+                            <p class="ps-4">
+                                {{ data.description }}
+                            </p>
                         </li>
                     </ul>
                     <ul class="col">
                         <li>
                             <h3>Endereço:</h3>
-                            {{ data.maps_link }}
+                            <p class="ps-4">
+                                {{ data.maps_link }}
+                            </p>
                         </li>
                         <br>
                         <li>
                             <h3>Saiba mais:</h3>
-                            {{ data.info }}
+                            <p class="ps-4">
+                                {{ data.info }}
+                            </p>
                         </li>
                         <br>
                     </ul>
                 </article>
             </section>
         </section>
-        {% if session %}
-            <section class="container">
-                <h3>Faça seu comentário:</h3>
-                <form action="/comment/{{ data.route }}" method="POST">
-                    <div class="mb-1 form-group">
+        <section class="container mt-4">
+            <h3>Faça seu comentário:</h3>
+            {% if session %}
+                <form action="/comment/{{ data.route }}" method="POST" class="ps-4">
+                    <div class="my-2 form-group">
                         <input type="text" class="form-control" id="comment" name="comment" aria-describedby="comment"
                         placeholder="Deixe aqui seu comentário sobre {{ data.name }}!" autocomplete="off">
                     </div>
-                    <div class="mb-4 form-group">
-                        <input type="submit" class="btn btn-primary" value="Fazer comentário">
+                    <div class="mt-2 mb-4 form-group">
+                        <input type="submit" class="btn button text-light" value="Fazer comentário">
                     </div>
                 </form>
-            </section>
-        {% endif %}
+            {% else %}
+                <p class="text-danger">É necessário estar logado para comentar!</p>
+            {% endif %}
+        </section>
         {% if comments %}
             <section class="container">
                 <h3>Comentários</h3>
                 {% for comment in comments %}
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <h5 class="card-title">{{ comment.name }}</h5>
-                                    <h6 class="card-subtitle mb-2 text-muted">{{ comment.username }}</h6>
+                    <div class="ps-4">
+                        <div class="card mb-2 ps-4">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <h5 class="card-title">{{ comment.name }}</h5>
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ comment.username }}</h6>
+                                    </div>
+                                    <div class="d-flex flex-column align-items-end">
+                                        <h6 class="card-subtitle mb-2 text-muted">{{ comment.date }}</h6>
+                                        {% if session.username == comment.username %}
+                                            <form action="/delete-comment/{{ data.route }}" method="post">
+                                                <input type="hidden" name="user_id" value="{{ comment.user_id }}">
+                                                <input type="hidden" name="location_id" value="{{ comment.location_id }}">
+                                                <input type="hidden" name="comment" value="{{ comment.comment }}">
+                                                <input type="submit" class="btn button" value="Excluir">
+                                            </form>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                                <div class="d-flex flex-column align-items-end">
-                                    <h6 class="card-subtitle mb-2 text-muted">{{ comment.date }}</h6>
-                                    {% if session.username == comment.username %}
-                                        <form action="/delete-comment/{{ data.route }}" method="post">
-                                            <input type="hidden" name="user_id" value="{{ comment.user_id }}">
-                                            <input type="hidden" name="location_id" value="{{ comment.location_id }}">
-                                            <input type="hidden" name="comment" value="{{ comment.comment }}">
-                                            <input type="submit" class="btn btn-primary" value="Excluir">
-                                        </form>
-                                    {% endif %}
-                                </div>
+                            <p class="card-text">{{ comment.comment }}</p>
                             </div>
-                        <p class="card-text">{{ comment.comment }}</p>
                         </div>
                     </div>
                 {% endfor %}
