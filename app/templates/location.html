@@ -41,12 +41,12 @@
                 <button aria-label="Next" class="glider-next">»</button>
                 <div role="tablist" class="dots"></div>
             </article>
-            <section class="mt-5 p-4 dark-background text-light">
+            <section class="mt-5 p-4 dark-background">
                 <article class="container row">
                     <ul class="col">
                         <li>
                             <h3>Descrição:</h3>
-                            <p class="ps-4">
+                            <p class="ps-4 paragraph">
                                 {{ data.description }}
                             </p>
                         </li>
@@ -55,14 +55,20 @@
                         <li>
                             <h3>Endereço:</h3>
                             <p class="ps-4">
-                                {{ data.maps_link }}
+                                <a href="{{ data.maps_link }}" class="text-dark link">
+                                    <span class="pe-1">Google Maps</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
                             </p>
                         </li>
                         <br>
                         <li>
                             <h3>Saiba mais:</h3>
                             <p class="ps-4">
-                                {{ data.info }}
+                                <a href="{{ data.info }}" class="text-dark link">
+                                    <span class="pe-1">Wikipedia</span>
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
                             </p>
                         </li>
                         <br>
@@ -83,7 +89,7 @@
                     </div>
                 </form>
             {% else %}
-                <p class="text-danger">É necessário estar logado para comentar!</p>
+                <p class="text-danger ps-4">É necessário estar logado para comentar!</p>
             {% endif %}
         </section>
         {% if comments %}

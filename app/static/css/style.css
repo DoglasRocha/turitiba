@@ -7,3 +7,14 @@ body
 {
     background-color: #98E645;
 }
+
+.paragraph 
+{
+    text-align: justify;
+    padding-right: 1rem;
+}
+
+.link
+{
+    text-decoration-color: var(--bs-dark);
+}
