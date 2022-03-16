@@ -40,7 +40,7 @@ def update_likes_in_all_locations():
     the ids and triggers other function that updates the likes count
     in a determinate location'''
     
-    all_ids = Reader.get_all_ids_from_locations()
+    all_ids = Reader.get_all_ids_from_locations(db)
     
     for id_ in all_ids:
         
