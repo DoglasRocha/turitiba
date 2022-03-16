@@ -35,7 +35,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # db manager
-db = DBManager('./turitiba.db')
+db = DBManager('app/turitiba.db')
 
 
 def update_likes_in_all_locations():
