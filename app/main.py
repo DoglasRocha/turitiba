@@ -1,16 +1,14 @@
-from crypt import methods
 from helpers import login_required
 from new_user import NewUser
 from log_user import LogUser
 from update_user import UpdateUser
 from flask import Flask, flash, redirect, render_template, request, session, jsonify
 from flask_session import Session
-from tempfile import mkdtemp, template
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
-from werkzeug.security import check_password_hash, generate_password_hash
 from db_manager import DBManager
 from datetime import datetime
 from reader import Reader
+from os import getenv
 
 # configure application
 app = Flask(__name__)
@@ -33,7 +31,7 @@ app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
 # db manager
-db = DBManager('app/turitiba.db')
+db = DBManager(getenv('DB_PATH'))
 
 
 def update_likes_in_all_locations():

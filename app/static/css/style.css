@@ -6,6 +6,7 @@
 body 
 {
     background-color: #BDEA8C;
+    padding-bottom: 70px;
 }
 
 #navbar
@@ -22,4 +23,9 @@ body
 .link
 {
     text-decoration-color: var(--bs-dark);
+}
+
+#footer
+{
+    background-color: #52663D;
 }
