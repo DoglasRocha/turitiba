@@ -17,4 +17,11 @@
 .button
 {
     background-color: #43661F;
+    transition-duration: 0.5s;
+}
+
+.button:hover
+{
+    background-color: #52663D;
+    border: 1px solid var(--bs-dark);
 }

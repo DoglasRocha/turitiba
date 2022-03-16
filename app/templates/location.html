@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="../static/css/location.css">
 {% endblock %}
 
+{% block meta %}
+    <meta name="description" content="{{ data.description }}">
+{% endblock meta %}
+
 {% block script %}
     <script defer src="../static/glider/glider.min.js"></script>
     <script defer src="../static/js/carousel-location.js"></script>
