@@ -35,10 +35,16 @@ db = DBManager(getenv('DB_PATH'))
 
 
 def update_likes_in_all_locations():
+    '''Function that updates the likes count in all locations.
+    Firstly, gets the ids of all locations, then iterates over 
+    the ids and triggers other function that updates the likes count
+    in a determinate location'''
     
-    for id_ in db.get_all_locations_id():
+    all_ids = Reader.get_all_ids_from_locations()
+    
+    for id_ in all_ids:
         
-        update_likes_count(id_[0])
+        update_likes_count(id_)
         
 
 @app.route('/')
@@ -128,6 +134,10 @@ def register():
 @app.route('/user/<username>')
 @login_required
 def user(username: str):
+    '''Gets the user data from the DB.
+    Receives the username as argument.
+    Renders the template
+    of the user screen, passing the user data as argument'''
     
     user_info = Reader.get_user_info(db, username)
     
@@ -137,7 +147,14 @@ def user(username: str):
 @app.route('/update-user/<username>', methods=['POST'])
 @login_required
 def update_user(username):
+    '''Updates the user data in the DB.
+    Receives the username as argument.
+    First, gets all the
+    data from the form, then delegates the update to the
+    UpdateUser class, that checks for errors and checks
+    what information needs to be updated'''
     
+    # gets data from the form
     name = request.form.get('name') or ''
     email = request.form.get('email') or ''
     current_password = request.form.get('old-password') or ''
@@ -160,6 +177,10 @@ def update_user(username):
 
 @app.route('/sample')
 def sample():
+    '''Returns a JSON with a sample with size 10.
+    First, updates the likes from all locations (ranking
+    system), then gets the sample from the DB and
+    return the "jsonification" of the sample.'''
     
     update_likes_in_all_locations()
     
@@ -170,6 +191,14 @@ def sample():
 
 @app.route('/location/<location_route>')
 def location(location_route: str):
+    '''Renders the location template.
+    Receives the location route as argument.
+    First, gets the data from the location, using the location_data
+    function, then checks if the user has liked the location,
+    then gets all the comments from the location.
+    Returns the rendered template, passing the data, the user like 
+    and the comments as arguments
+    '''
         
     data = location_data(location_route).get_json()
     has_liked = user_has_liked(session.get('username'), location_route)
@@ -183,6 +212,10 @@ def location(location_route: str):
 
 @app.route('/location-data/<location_route>')
 def location_data(location_route: str):
+    '''Returns a JSON with the data from a location.
+    Receives the location route as argument.
+    Gets the location data from the DB and then
+    returns the "jsonification" of it'''
     
     data = Reader.get_location_data(db, location_route)
     
@@ -190,6 +223,12 @@ def location_data(location_route: str):
 
 
 def user_has_liked(username: str, location_route: str) -> bool:
+    '''Returns a boolean that indicates if the user has
+    or has not liked a location.
+    Takes the username and the location route as arguments.
+    If the user is not logged in, just returns False (guard clause).
+    Then, checks in the DB if the user has liked and return the info.
+    '''
     
     if not (username):
         return False
@@ -199,6 +238,9 @@ def user_has_liked(username: str, location_route: str) -> bool:
 
 @app.route('/logout', methods=['POST'])
 def logout():
+    '''Logs out the user.
+    First, gets the callback page, then clear the cookies, flashes
+    the user log out message and then redirects to the callback route.'''
     
     callback = request.args.get('callback')
     session.clear()
@@ -209,6 +251,7 @@ def logout():
     
 @app.route('/main')
 def main():
+    '''Just an auxiliary route that redirects to the "/" route.'''
     
     return redirect('/')
 

@@ -1,3 +1,5 @@
+// Sets the glider in the index page at the glider element
+
 new Glider(document.querySelector('.glider'), {
   slidesToShow: 3.5,
   draggable: true,

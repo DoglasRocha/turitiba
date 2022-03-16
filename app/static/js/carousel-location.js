@@ -1,3 +1,5 @@
+// Sets the glider in the location template at the glider element
+
 new Glider(document.querySelector('.glider'), {
     slidesToShow: 2.5,
     draggable: true,

@@ -1,3 +1,7 @@
+/* Script responsible for alert the in the login page
+if the form is not fullfilled correctly by removing the hint
+text */
+
 function main()
 {
     instanceUsernameChecker();

@@ -1,3 +1,14 @@
+''' Script responsible for adding the images path
+into the DB. Firstly, defines a function that returns
+the formatted string of the image path. Then, defines
+a list of dicts with the id, the name and the amount of images
+- 1 (implementation detail, the main image of a locations
+has to have the 999 index, the rest will be counted from 0.
+So, because there is always a 999 index, amount - 1). 
+Then, iterates over the list and adds all the images of a 
+determined location '''
+
+
 import sqlite3 as sql
 
 def get_path(name: str, number: int) -> str:

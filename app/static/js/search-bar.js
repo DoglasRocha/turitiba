@@ -1,3 +1,6 @@
+/* Script responsible for getting the user input in the 
+search bar and making the request of names in the API */
+
 const searchBar = document.querySelector('#search-bar');
 const datalist = document.querySelector('#places');
 

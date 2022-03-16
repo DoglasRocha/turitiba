@@ -1,3 +1,11 @@
+''' Script responsible for adding the data of all locations
+in the database. Firstly, it takes the list of the wikipedia
+name of all locations, then requests the data from the Wikipedia
+API, inserts the info into the database, writes the addresses of
+all the images into a text file, images that will be downloaded
+in the future'''
+
+
 '''sqlite> .schema locations
 CREATE TABLE locations (id INTEGER NOT NULL PRIMARY KEY,
 name TEXT NOT NULL,

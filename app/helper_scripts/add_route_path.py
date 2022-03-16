@@ -1,3 +1,7 @@
+''' Simple script responsible for getting the names of all 
+locations,then formatting into a route like format and adding
+it into the DB '''
+
 import sqlite3 as sql
 
 connection = sql.connect('../turitiba.db')

@@ -1,3 +1,7 @@
+/* Script responsible for doing the post request when the
+    heart (like button) is pressed, changing the heart (from solid
+    to regular) and updating the likes count in the front-end */
+
 let heart = document.querySelector('#heart');
 let likes = document.querySelector('#likes');
 

@@ -182,7 +182,7 @@ class Reader:
     
     
     @staticmethod
-    def search_names(db, user_search: str) -> list:
+    def search_names(db: DBManager, user_search: str) -> list:
         
         untreated_names = db.search_location_names(user_search)
         
@@ -191,3 +191,15 @@ class Reader:
             names.append(name[0])
         
         return names
+    
+    
+    @staticmethod
+    def get_all_ids_from_locations(db: DBManager):
+        
+        unformated_ids = db.get_all_locations_id()
+        all_ids = []
+        
+        for id_ in unformated_ids:
+            all_ids.append(id_[0])
+            
+        return all_ids

@@ -1,3 +1,7 @@
+/* Script responsible for alert the in the register page 
+if the form is not fullfilled correctly by changing the color of 
+the hint text */
+
 // main function
 function main()
 {
