@@ -9,6 +9,7 @@ from db_manager import DBManager
 from datetime import datetime
 from reader import Reader
 from os import getenv
+from like import Like
 
 # configure application
 app = Flask(__name__)
@@ -259,51 +260,20 @@ def main():
 @app.route('/manage-likes/<location_route>', methods=['POST'])
 @login_required
 def manage_likes(location_route: str) -> str:
+    '''
+    Route responsible for managing the likes in a location.
+    Receives the route of the location as argument.
+    Delegates the logic to the Like object.
+    '''
     
     user_id = Reader.get_user_id(db, session['username'])
     location_id = Reader.get_location_id(db, location_route)
     
-    user_has_register = Reader.user_has_register_in_likes_table(
-        db, session['username'], location_route
-    )
+    like_manager = Like(db, user_id, location_id, session['username'],
+                        location_route)
     
-    if not (user_has_register):
-        
-        insert_like(user_id, location_id)
-        update_likes_count(location_id)
-        return ''
-        
-        
-    has_liked = Reader.user_has_liked(
-        db, session['username'], location_route
-    )
-    
-    if (has_liked):
-    
-        unlike_location(user_id, location_id)
-        update_likes_count(location_id)
-        return ''
-    
-    
-    like_location(user_id, location_id)
-    update_likes_count(location_id)
-    return ''
-        
-
-
-def unlike_location(user_id: int, location_id: int) -> None:
-    
-    db.unlike_location(user_id, location_id)
-    
-
-def like_location(user_id: int, location_id: int) -> None:
-    
-    db.like_location(user_id, location_id)
-    
-
-def insert_like(user_id: str, location_id: int) -> None:
-    
-    db.insert_like_in_location(user_id, location_id)
+    like_manager.set_action().action()
+    return '', 200
     
     
 def update_likes_count(location_id: int) -> None:
@@ -344,8 +314,8 @@ def comment(location_route: str) -> None:
 @app.route('/delete-comment/<location_route>', methods=['POST'])
 def delete_comment(location_route: str) -> None:
     
-    user_id = int(request.form.get('user_id'))
-    location_id = int(request.form.get('location_id'))
+    user_id = Reader.get_user_id(db, session['username'])
+    location_id = Reader.get_location_id(db, location_route)
     comment = request.form.get('comment')
     
     db.delete_comment(user_id, location_id, comment)
